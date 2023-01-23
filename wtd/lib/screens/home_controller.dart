@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
-
 import '../model/todo.dart';
 
 class HomeController extends GetxController{
@@ -21,14 +20,22 @@ class HomeController extends GetxController{
     todoList.value=box.values.cast<ToDo>().toList();
   }
 
-  void handleToDoChange(int index, ToDo todo) async{
+  void updateToDoItemByIndex(int index, ToDo todo) async{
     var box =await Hive.openBox<ToDo>('todoBox');
     await box.putAt(index, todo);
+    getToDoItemList();
   }
-  // void updateCartItemByIndex(int index, CartModel cartModel)async{
-  //   var box =await  Hive.openBox<CartModel>('SDFJSDFSD');
-  //   await box.putAt(index, cartModel);
-  //   getCartData();
-  // }
 
+  void deleteDataByIndex(int index)async{
+    var box =await  Hive.openBox<ToDo>('todoBox');
+    await box.deleteAt(index);
+    getToDoItemList();
+  }
+
+  void loadToDoItemListData()async{
+    await Future.delayed(Duration(
+          seconds: 5
+      ));
+      getToDoItemList();
+    }
   }

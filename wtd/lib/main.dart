@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:wtd/screens/home.dart';
 import 'package:wtd/screens/home_controller.dart';
+import 'package:wtd/widgets/empty_list.dart';
 
 import 'model/todo.dart';
 
@@ -22,7 +23,8 @@ class MyApp extends StatelessWidget {MyApp({super.key});
       debugShowCheckedModeBanner: false,
       title: 'What to do',
       getPages: [
-        GetPage(name: '/', page: ()=>Home())
+        GetPage(name: '/', page: ()=>const Home()),
+        GetPage(name: '/empty_list', page: ()=>EmptyList()),
       ],
     );
   }

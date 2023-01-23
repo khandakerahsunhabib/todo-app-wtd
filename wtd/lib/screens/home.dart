@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get_navigation/get_navigation.dart';
 import 'package:wtd/screens/home_controller.dart';
 import '../constants/colors.dart';
-import '../model/todo.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -13,13 +13,10 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final HomeController _controller= Get.put(HomeController());
-  var isDone=false;
-  ToDo? todo;
-
 
   @override
   Widget build(BuildContext context) {
-    _controller.getToDoItemList();
+    _controller.loadToDoItemListData();
     return Scaffold(
       backgroundColor: tdBGColor,
       appBar: _buildAppBar(),
@@ -53,14 +50,20 @@ class _HomeState extends State<Home> {
                               setState(() {
                                 if(_controller.todoList[index].isDone==false){
                                   _controller.todoList[index].isDone=true;
+                                  //_controller.updateToDoItemByIndex(index, todo!);
                                 }else{
                                   _controller.todoList[index].isDone=false;
+                                  //_controller.updateToDoItemByIndex(index, todo!);
                                 }
                               });
                             },
                             tileColor: Colors.white,
                             leading: _controller.todoList[index].isDone!?Icon(Icons.check_box, color: tdBlue,):Icon(Icons.check_box_outline_blank, color: tdBlue,),
-                            trailing: Icon(Icons.delete, color: tdRed,),
+                            trailing: IconButton(
+                              onPressed: () {
+                                _controller.deleteDataByIndex(index);
+                              },
+                              icon: Icon(Icons.delete, color: tdRed,),),
                             title: Text(_controller.todoList[index].todoText.toString(),
                               style: TextStyle(
                                 decoration: _controller.todoList[index].isDone!? TextDecoration.lineThrough:null
@@ -119,7 +122,32 @@ class _HomeState extends State<Home> {
                       elevation: 10
                     ),
                     onPressed: () {
-                      _controller.addToDoItem();
+                      if(_controller.todoController.text.isEmpty){
+                        Get.showSnackbar(
+                          const GetSnackBar(
+                            message:'Please Add Your Task Here',
+                            icon: Icon(Icons.announcement, color: Colors.white,),
+                            duration: Duration(seconds: 2),
+                            snackPosition: SnackPosition.BOTTOM,
+                            backgroundColor: tdBlack,
+                            margin: EdgeInsets.all(20),
+                            borderRadius: 10,
+                          ),
+                        );
+                      }else{
+                        _controller.addToDoItem();
+                        Get.showSnackbar(
+                          const GetSnackBar(
+                            message: 'Task Added Successfully!',
+                            snackPosition: SnackPosition.BOTTOM,
+                            duration: Duration(seconds: 2),
+                            backgroundColor: tdBlack,
+                            margin: EdgeInsets.all(20),
+                            borderRadius: 10,
+                            icon: Icon(Icons.done, color: Colors.white,),
+                          ),
+                        );
+                      }
                     },
                     child: Text('+',
                       style: TextStyle(
