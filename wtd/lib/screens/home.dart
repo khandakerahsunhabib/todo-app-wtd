@@ -49,13 +49,21 @@ class _HomeState extends State<Home> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           ListTile(
-                            onTap: (){},
+                            onTap: (){
+                              setState(() {
+                                if(_controller.todoList[index].isDone==false){
+                                  _controller.todoList[index].isDone=true;
+                                }else{
+                                  _controller.todoList[index].isDone=false;
+                                }
+                              });
+                            },
                             tileColor: Colors.white,
                             leading: _controller.todoList[index].isDone!?Icon(Icons.check_box, color: tdBlue,):Icon(Icons.check_box_outline_blank, color: tdBlue,),
                             trailing: Icon(Icons.delete, color: tdRed,),
                             title: Text(_controller.todoList[index].todoText.toString(),
                               style: TextStyle(
-                                //decoration: TextDecoration.lineThrough
+                                decoration: _controller.todoList[index].isDone!? TextDecoration.lineThrough:null
                               ) ,),
                           )
                         ],
