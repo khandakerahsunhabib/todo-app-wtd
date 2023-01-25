@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_navigation/get_navigation.dart';
-import 'package:wtd/screens/home_controller.dart';
+import '../screens/home_controller.dart';
 import '../constants/colors.dart';
 
 class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+      Home({Key? key}) : super(key: key);
+      static const routeName='/home';
 
   @override
   State<Home> createState() => _HomeState();

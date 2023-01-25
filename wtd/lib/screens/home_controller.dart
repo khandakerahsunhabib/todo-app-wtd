@@ -1,7 +1,8 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import '../model/todo.dart';
+import 'home.dart';
 
 class HomeController extends GetxController{
   final todoController= TextEditingController();
@@ -34,8 +35,14 @@ class HomeController extends GetxController{
 
   void loadToDoItemListData()async{
     await Future.delayed(Duration(
-          seconds: 5
+          seconds:1
       ));
       getToDoItemList();
     }
+  void navigateToHomeScreen() async{
+    await Future.delayed(Duration(
+        seconds: 10
+    ));
+    Get.toNamed(Home.routeName);
+  }
   }
