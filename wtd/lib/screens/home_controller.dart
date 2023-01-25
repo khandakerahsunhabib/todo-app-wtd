@@ -7,7 +7,6 @@ import 'home.dart';
 class HomeController extends GetxController{
   final todoController= TextEditingController();
   var todoList=<ToDo>[].obs;
-  var todoIsDone=false.obs;
 
   void addToDoItem() async{
     var box = await Hive.openBox<ToDo>('todoBox');
@@ -15,24 +14,20 @@ class HomeController extends GetxController{
     todoController.clear();
     getToDoItemList();
   }
-
   void getToDoItemList() async{
     var box =await  Hive.openBox<ToDo>('todoBox');
     todoList.value=box.values.cast<ToDo>().toList();
   }
-
   void updateToDoItemByIndex(int index, ToDo todo) async{
     var box =await Hive.openBox<ToDo>('todoBox');
     await box.putAt(index, todo);
     getToDoItemList();
   }
-
   void deleteDataByIndex(int index)async{
     var box =await  Hive.openBox<ToDo>('todoBox');
     await box.deleteAt(index);
     getToDoItemList();
   }
-
   void loadToDoItemListData()async{
     await Future.delayed(Duration(
           seconds:1
@@ -41,7 +36,7 @@ class HomeController extends GetxController{
     }
   void navigateToHomeScreen() async{
     await Future.delayed(Duration(
-        seconds: 10
+        seconds: 5
     ));
     Get.toNamed(Home.routeName);
   }

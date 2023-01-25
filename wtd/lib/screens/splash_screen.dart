@@ -3,8 +3,7 @@ import 'package:get/get.dart';
 import 'package:wtd/constants/colors.dart';
 import 'package:wtd/screens/home_controller.dart';
 class SplashScreen extends StatefulWidget {
-  SplashScreen({Key? key}) : super(key: key);
-
+  const SplashScreen({Key? key}) : super(key: key);
   @override
   State<SplashScreen> createState() => _SplashScreenState();
 }
