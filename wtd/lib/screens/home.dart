@@ -1,6 +1,6 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../model/todo.dart';
 import '../screens/home_controller.dart';
 import '../constants/colors.dart';
 
@@ -14,63 +14,131 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final HomeController _controller= Get.put(HomeController());
+  bool _canPop=false;
+  final _listTitle='My Task List';
 
   @override
   Widget build(BuildContext context) {
     _controller.loadToDoItemListData();
+    //_controller.practiceList();
     return WillPopScope(
-      onWillPop: ()async{
+      onWillPop: () async {
+        if(_canPop){
+          return true;
+        }else{
+          showDialog(
+              context: context,
+              builder: (context)=>AlertDialog(
+                title: Text('Alert', style: TextStyle(
+                     color: Colors.green,
+                     fontSize: 25
+                ),),
+                content: Text('Are you sure want to exit?',
+                    style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 18
+                    ),),
+                actions: [
+                  TextButton(
+                      onPressed: (){
+                      Navigator.of(context).pop();
+                      },
+                      child: Text('No',
+                          style: TextStyle(
+                              color: tdRed,
+                          ))),
+                  TextButton(
+                      onPressed: (){
+                        setState(() {
+                          _canPop=true;
+                        });
+                        //Navigator.of(context).pop();
+                        exit(0);
+                      },
+                      child: Text('Yes',
+                          style: TextStyle(
+                            color: Colors.green,
+                          ))),
+                ],
+              )
+          );
+        }
         return false;
       },
       child: Scaffold(
         backgroundColor: tdBGColor,
         appBar: _buildAppBar(),
         body: Stack(
-          children: [
+          children:[
             Container(
               padding: const EdgeInsets.symmetric(
                   horizontal: 20,
                   vertical: 15),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   searchBox(),
                   Container(
-                    margin: EdgeInsets.only(top: 10, bottom: 10),
-                    child: Text('All ToDos',
-                      style: TextStyle(
-                          fontSize: 30,
-                          color: tdBlack
-                      ) ,),
+                    alignment: Alignment.center,
+                    width: double.infinity,
+                    height: 55,
+                    margin: const EdgeInsets.only(top: 50, bottom: 15),
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 8),
+                      child: Text(_listTitle,
+                        style: TextStyle(
+                            fontSize: 50,
+                            color: Colors.blueGrey,
+                            fontFamily: 'FONTLERO'
+                        ) ,),
+                    ),
                   ),
                   Expanded(
+                    flex: 1,
                     child: Obx(()=>ListView.builder(
-                      itemCount: _controller.todoList.length,
+                      itemCount: _controller.foundToDo.length,
                       itemBuilder: (context, index) => Container(
                         margin: EdgeInsets.only(bottom: 8),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             ListTile(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(25)
+                              ) ,
                               onTap: (){
                                 setState(() {
                                   if(_controller.todoList[index].isDone==false){
                                     _controller.todoList[index].isDone=true;
-                                    //_controller.updateToDoItemByIndex(index, todo!);
+                                    //_controller.updateToDoItemByIndex(index, todo);
+                                    print('Updated');
                                   }else{
                                     _controller.todoList[index].isDone=false;
-                                    //_controller.updateToDoItemByIndex(index, todo!);
+                                    //_controller.updateToDoItemByIndex(index,updateToDo as ToDo);
                                   }
                                 });
                               },
+                              contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 2),
                               tileColor: Colors.white,
                               leading: _controller.todoList[index].isDone!?Icon(Icons.check_box, color: tdBlue,):Icon(Icons.check_box_outline_blank, color: tdBlue,),
-                              trailing: IconButton(
-                                onPressed: () {
-                                  _controller.deleteDataByIndex(index);
-                                },
-                                icon: Icon(Icons.delete, color: tdRed,),),
-                              title: Text(_controller.todoList[index].todoText.toString(),
+                              trailing: Container(
+                                padding: EdgeInsets.all(0),
+                                margin: EdgeInsets.symmetric(vertical: 11,),
+                                width: 38,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                  color: tdRed,
+                                  borderRadius: BorderRadius.circular(5)
+                                ),
+                                child: IconButton(
+                                  onPressed: () {
+                                    _controller.deleteDataByIndex(index);
+                                  },
+                                  icon: Icon(Icons.delete, color: Colors.white, size: 19,),),
+                              ),
+                              title: Text(_controller.foundToDo[index].todoText.toString(),
                                 style: TextStyle(
+                                  fontSize: 18,
                                   decoration: _controller.todoList[index].isDone!? TextDecoration.lineThrough:null
                                 ) ,),
                             )
@@ -108,9 +176,14 @@ class _HomeState extends State<Home> {
                       borderRadius: BorderRadius.circular(10)
                     ),
                         child: TextField(
+                          textAlign: TextAlign.center,
                           controller: _controller.todoController,
                           decoration: InputDecoration(
-                            hintText: 'Add a new todo item',
+                            hintText: 'Add your task here',
+                            hintStyle: TextStyle(
+                              color: tdBlue,
+                              fontSize: 16,
+                            ),
                             border: InputBorder.none,
                           ),
                         ),
@@ -169,6 +242,7 @@ class _HomeState extends State<Home> {
       ),
     );
   }
+
   AppBar _buildAppBar() {
     return AppBar(
       automaticallyImplyLeading: false,
@@ -193,6 +267,7 @@ class _HomeState extends State<Home> {
       ),
     );
   }
+
   Widget searchBox() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -200,7 +275,11 @@ class _HomeState extends State<Home> {
           color: Colors.white,
           borderRadius: BorderRadius.circular(20)
       ),
-      child: const TextField(
+      child: TextField(
+        onChanged: (value){
+          _controller.searchToDoItem();
+        },
+        controller: _controller.searchToDoItemController,
         decoration: InputDecoration(
             contentPadding: EdgeInsets.all(0),
             prefixIcon: Icon(

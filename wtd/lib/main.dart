@@ -24,8 +24,8 @@ class MyApp extends StatelessWidget {MyApp({super.key});
       debugShowCheckedModeBanner: false,
       title: 'What to do',
       getPages: [
-        GetPage(name: '/', page:()=>SplashScreen()),
-        GetPage(name: '/home', page: ()=> Home()),
+        GetPage(name: '/', page:()=>const SplashScreen()),
+        GetPage(name: '/home', page: ()=> const Home()),
         GetPage(name: '/empty_list', page: ()=>EmptyList()),
       ],
     );
