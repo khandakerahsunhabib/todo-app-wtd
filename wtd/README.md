@@ -2,6 +2,17 @@
 
 What to do (WTD) is a todo app to save your daily task
 
+Features of this app:
+* Save, delete and mark your task
+* search functionality added
+* user friendly interface
+
+Technologies:
+* I have used Getx state Management here.
+* Used Local database Hive
+* Implemented Search functionality
+* Used custom fonts
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
