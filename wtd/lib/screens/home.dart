@@ -81,16 +81,30 @@ class _HomeState extends State<Home> {
                   Container(
                     alignment: Alignment.center,
                     width: double.infinity,
-                    height: 55,
-                    margin: const EdgeInsets.only(top: 50, bottom: 15),
+                    height: 40,
+                    margin: const EdgeInsets.only(top: 40),
                     child: Padding(
-                      padding: EdgeInsets.only(left: 8),
+                      padding: const EdgeInsets.only(left: 8),
                       child: Text(_listTitle,
-                        style: TextStyle(
-                            fontSize: 50,
+                        style: const TextStyle(
+                            fontSize: 35,
+                            fontWeight: FontWeight.bold,
                             color: Colors.blueGrey,
-                            fontFamily: 'FONTLERO'
+                            fontFamily: 'MYRIADPRO'
                         ) ,),
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(bottom: 5),
+                    height: 40,
+                    width: double.infinity,
+                    alignment: Alignment.center,
+                    child: Obx(()=>Text('Total task added: ${_controller.todoList.length.toString()}',
+                      style: const TextStyle(
+                          fontFamily: 'MYRIADPRO',
+                          fontSize: 16,
+                          color: Colors.blueGrey
+                      ),),
                     ),
                   ),
                   Expanded(
@@ -118,27 +132,27 @@ class _HomeState extends State<Home> {
                                   }
                                 });
                               },
-                              contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 2),
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 2),
                               tileColor: Colors.white,
-                              leading: _controller.todoList[index].isDone!?Icon(Icons.check_box, color: tdBlue,):Icon(Icons.check_box_outline_blank, color: tdBlue,),
+                              leading: _controller.todoList[index].isDone!?const Icon(Icons.check_box, color: tdBlue,):const Icon(Icons.check_box_outline_blank, color: tdBlue,),
                               trailing: Container(
-                                padding: EdgeInsets.all(0),
-                                margin: EdgeInsets.symmetric(vertical: 11,),
+                                padding: const EdgeInsets.all(0),
+                                margin: const EdgeInsets.symmetric(vertical: 11,),
                                 width: 38,
                                 height: 40,
                                 decoration: BoxDecoration(
-                                  color: tdRed,
+                                  color: Colors.red.shade300,
                                   borderRadius: BorderRadius.circular(5)
                                 ),
                                 child: IconButton(
                                   onPressed: () {
                                     _controller.deleteDataByIndex(index);
                                   },
-                                  icon: Icon(Icons.delete, color: Colors.white, size: 19,),),
+                                  icon: const Icon(Icons.delete, color: Colors.white, size: 19,),),
                               ),
                               title: Text(_controller.foundToDo[index].todoText.toString(),
                                 style: TextStyle(
-                                  fontSize: 18,
+                                  fontSize: 17,
                                   decoration: _controller.todoList[index].isDone!? TextDecoration.lineThrough:null
                                 ) ,),
                             )
@@ -156,18 +170,18 @@ class _HomeState extends State<Home> {
                 children: [
                   Expanded(
                       child: Container(
-                       margin: EdgeInsets.only(
+                       margin: const EdgeInsets.only(
                         bottom: 20,
                         right: 20,
                         left: 20
                     ),
-                    padding: EdgeInsets.symmetric(
+                    padding: const EdgeInsets.symmetric(
                         horizontal: 20,
                         vertical: 5
                     ),
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      boxShadow: [BoxShadow(
+                      boxShadow: const [BoxShadow(
                         color: Colors.grey,
                         offset: Offset(0.0,0.0),
                         blurRadius: 10.0,
@@ -178,7 +192,7 @@ class _HomeState extends State<Home> {
                         child: TextField(
                           textAlign: TextAlign.center,
                           controller: _controller.todoController,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             hintText: 'Add your task here',
                             hintStyle: TextStyle(
                               color: tdBlue,
@@ -189,7 +203,7 @@ class _HomeState extends State<Home> {
                         ),
                   )),
                   Container(
-                    margin: EdgeInsets.only(
+                    margin: const EdgeInsets.only(
                         bottom: 20,
                         right: 20
                     ),

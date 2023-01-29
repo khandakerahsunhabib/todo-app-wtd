@@ -29,6 +29,6 @@ flutter:
   assets:
    - assets/images/
   fonts:
-    - family: FONTLERO
+    - family: MYRIADPRO
       fonts:
-        - asset: assets/fonts/FONTLERO.ttf
+        - asset: assets/fonts/MYRIADPRO-REGULAR.Otf
