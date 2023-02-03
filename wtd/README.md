@@ -6,6 +6,7 @@ Features of this app:
 * Save, delete and mark your task
 * search functionality added
 * user friendly interface
+* splash screen, and more.
 
 Technologies:
 * I have used Getx state Management here.
