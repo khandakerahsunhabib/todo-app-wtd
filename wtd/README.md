@@ -9,6 +9,7 @@ Features of this app:
 
 Technologies:
 * I have used Getx state Management here.
+* Route Management
 * Used Local database Hive
 * Implemented Search functionality
 * Used custom fonts
