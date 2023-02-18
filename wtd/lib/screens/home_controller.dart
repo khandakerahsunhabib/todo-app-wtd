@@ -36,14 +36,14 @@ class HomeController extends GetxController{
   }
 
   void loadToDoItemListData()async{
-    await Future.delayed(Duration(
+    await Future.delayed(const Duration(
           seconds:1
       ));
       getToDoItemList();
     }
 
   void navigateToHomeScreen() async{
-    await Future.delayed(Duration(
+    await Future.delayed(const Duration(
         seconds: 5
     ));
     Get.toNamed(Home.routeName);
@@ -65,19 +65,4 @@ class HomeController extends GetxController{
       });
     }
     }
-
-  void practiceList(){
-    var list= List.empty(growable: true);
-    print(list);
-    list.add(500);
-    print(list);
-    list.add(50);
-    print(list);
-
-    for(var i=0; i<20; i++){
-      list.add('Data$i');
-      print(list.length);
-    }
-  }
-
   }
