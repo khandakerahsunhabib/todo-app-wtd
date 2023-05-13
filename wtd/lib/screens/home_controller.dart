@@ -4,65 +4,65 @@ import 'package:hive/hive.dart';
 import '../model/todo.dart';
 import 'home.dart';
 
-class HomeController extends GetxController{
-  final todoController= TextEditingController();
-  final searchToDoItemController= TextEditingController();
-  var todoList=<ToDo>[].obs;
-  var foundToDo=<ToDo>[].obs;
+class HomeController extends GetxController {
+  final todoController = TextEditingController();
+  final searchToDoItemController = TextEditingController();
+  var todoList = <ToDo>[].obs;
+  var foundToDo = <ToDo>[].obs;
 
-  void addToDoItem() async{
+  void addToDoItem() async {
     var box = await Hive.openBox<ToDo>('todoBox');
-    box.add(ToDo(id: DateTime.now().microsecondsSinceEpoch.toString(), todoText: todoController.text,));
+    box.add(ToDo(
+      id: DateTime.now().microsecondsSinceEpoch.toString(),
+      todoText: todoController.text,
+    ));
     todoController.clear();
     getToDoItemList();
   }
 
-  void getToDoItemList() async{
-    var box =await  Hive.openBox<ToDo>('todoBox');
-    todoList.value=box.values.cast<ToDo>().toList();
+  void getToDoItemList() async {
+    var box = await Hive.openBox<ToDo>('todoBox');
+    todoList.value = box.values.cast<ToDo>().toList();
     searchToDoItem();
   }
 
-  void updateToDoItemByIndex(int index, ToDo todo) async{
-    var box =await Hive.openBox<ToDo>('todoBox');
+  void updateToDoItemByIndex(int index, ToDo todo) async {
+    var box = await Hive.openBox<ToDo>('todoBox');
     await box.putAt(index, todo);
     getToDoItemList();
   }
 
-  void deleteDataByIndex(int index)async{
-    var box =await  Hive.openBox<ToDo>('todoBox');
+  void deleteDataByIndex(int index) async {
+    var box = await Hive.openBox<ToDo>('todoBox');
     await box.deleteAt(index);
     getToDoItemList();
   }
 
-  void loadToDoItemListData()async{
-    await Future.delayed(const Duration(
-          seconds:1
-      ));
-      getToDoItemList();
-    }
+  void loadToDoItemListData() async {
+    await Future.delayed(const Duration(seconds: 1));
+    getToDoItemList();
+  }
 
-  void navigateToHomeScreen() async{
-    await Future.delayed(const Duration(
-        seconds: 5
-    ));
+  void navigateToHomeScreen() async {
+    await Future.delayed(const Duration(seconds: 5));
     Get.toNamed(Home.routeName);
   }
 
-  void searchToDoItem(){
+  void searchToDoItem() {
     foundToDo.clear();
-    var searchingValue=searchToDoItemController.text;
-    if(searchingValue.length==0){
-       todoList.forEach((element) {
-         foundToDo.add(ToDo(id: element.id, todoText: element.todoText));
-       });
-    }else{
+    var searchingValue = searchToDoItemController.text;
+    if (searchingValue.length == 0) {
       todoList.forEach((element) {
-        if(element.todoText!.toLowerCase().contains(searchingValue.toLowerCase())){
-           foundToDo.add(ToDo(id: element.id, todoText: element.todoText));
-        }else{
-        }
+        foundToDo.add(ToDo(id: element.id, todoText: element.todoText));
+      });
+    } else {
+      todoList.forEach((element) {
+        if (element.todoText!
+            .toLowerCase()
+            .contains(searchingValue.toLowerCase())) {
+          foundToDo.add(ToDo(id: element.id, todoText: element.todoText));
+        } else {}
       });
     }
-    }
   }
+}

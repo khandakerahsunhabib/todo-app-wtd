@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../model/todo.dart';
 import '../screens/home_controller.dart';
 import '../constants/colors.dart';
 
@@ -16,11 +17,11 @@ class _HomeState extends State<Home> {
   final HomeController _controller = Get.put(HomeController());
   bool _canPop = false;
   final _listTitle = 'My Task List';
+  ToDo? todo;
 
   @override
   Widget build(BuildContext context) {
     _controller.loadToDoItemListData();
-    //_controller.practiceList();
     return WillPopScope(
       onWillPop: () async {
         if (_canPop) {
@@ -72,22 +73,19 @@ class _HomeState extends State<Home> {
         ),
         drawer: Drawer(
           child: ListView(
-            children:const [
+            children: const [
               DrawerHeader(
-                decoration: BoxDecoration(
-                  color: Colors.blue
-                ),
+                decoration: BoxDecoration(color: Colors.blue),
                 child: Text('WTD (What To Do)'),
-                ),
-                ListTile(
-                  leading: Icon(Icons.home),
-                  title: Text('Home Page'),
-                ),
-                ListTile(
-                  leading: Icon(Icons.person),
-                  title: Text('About Us'),
-                )
-
+              ),
+              ListTile(
+                leading: Icon(Icons.home),
+                title: Text('Home Page'),
+              ),
+              ListTile(
+                leading: Icon(Icons.person),
+                title: Text('About Us'),
+              )
             ],
           ),
         ),
@@ -118,7 +116,7 @@ class _HomeState extends State<Home> {
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.only(bottom: 5),
+                      margin: const EdgeInsets.only(bottom: 5),
                       height: 40,
                       width: double.infinity,
                       alignment: Alignment.center,
@@ -137,7 +135,7 @@ class _HomeState extends State<Home> {
                         child: Obx(() => ListView.builder(
                               itemCount: _controller.foundToDo.length,
                               itemBuilder: (context, index) => Container(
-                                margin: EdgeInsets.only(bottom: 8),
+                                margin: const EdgeInsets.only(bottom: 8),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -152,12 +150,34 @@ class _HomeState extends State<Home> {
                                               false) {
                                             _controller.todoList[index].isDone =
                                                 true;
-                                            //_controller.updateToDoItemByIndex(index, todo);
-                                            print('Updated');
+                                            _controller.updateToDoItemByIndex(
+                                                index,
+                                                ToDo(
+                                                    id: _controller
+                                                        .todoList[index].id,
+                                                    todoText: _controller
+                                                        .todoList[index]
+                                                        .todoText,
+                                                    isDone: enableDisable(
+                                                        _controller
+                                                            .todoList[index]
+                                                            .isDone)));
+                                            //print('Updated');
                                           } else {
                                             _controller.todoList[index].isDone =
                                                 false;
-                                            //_controller.updateToDoItemByIndex(index,updateToDo as ToDo);
+                                            _controller.updateToDoItemByIndex(
+                                                index,
+                                                ToDo(
+                                                    id: _controller
+                                                        .todoList[index].id,
+                                                    todoText: _controller
+                                                        .todoList[index]
+                                                        .todoText,
+                                                    isDone: enableDisable(
+                                                        _controller
+                                                            .todoList[index]
+                                                            .isDone)));
                                           }
                                         });
                                       },
@@ -253,7 +273,7 @@ class _HomeState extends State<Home> {
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                           primary: tdBlue,
-                          minimumSize: Size(60, 60),
+                          minimumSize: const Size(60, 60),
                           elevation: 10),
                       onPressed: () {
                         if (_controller.todoController.text.isEmpty) {
@@ -289,7 +309,7 @@ class _HomeState extends State<Home> {
                           );
                         }
                       },
-                      child: Text(
+                      child: const Text(
                         '+',
                         style: TextStyle(fontSize: 40),
                       ),
@@ -314,7 +334,7 @@ class _HomeState extends State<Home> {
           _controller.searchToDoItem();
         },
         controller: _controller.searchToDoItemController,
-        decoration: InputDecoration(
+        decoration: const InputDecoration(
             contentPadding: EdgeInsets.all(0),
             prefixIcon: Icon(
               Icons.search,
@@ -327,5 +347,11 @@ class _HomeState extends State<Home> {
             hintStyle: TextStyle(color: tdGrey)),
       ),
     );
+  }
+
+  bool enableDisable(bool? isDone) {
+    bool? status = isDone!;
+    print('status: ${status}');
+    return status;
   }
 }
