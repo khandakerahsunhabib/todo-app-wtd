@@ -65,4 +65,10 @@ class HomeController extends GetxController {
       }
     }
   }
+
+  bool enableDisable(bool? isDone) {
+    bool? status = isDone!;
+    //print('status: ${status}');
+    return status;
+  }
 }
