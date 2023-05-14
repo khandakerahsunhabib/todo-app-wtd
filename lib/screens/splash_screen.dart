@@ -4,14 +4,14 @@ import 'package:wtd/constants/colors.dart';
 import 'package:wtd/screens/home_controller.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+  const SplashScreen({Key? key}) : super(key: key); 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
 class _SplashScreenState extends State<SplashScreen> {
   final HomeController _controller = Get.put(HomeController());
-  final appName = "What To Do";
+  final appName = "ToDo App";
 
   @override
   void initState() {
@@ -41,8 +41,8 @@ class _SplashScreenState extends State<SplashScreen> {
       children: [
         Center(
           child: Container(
-            width: 150,
-            height: 140,
+            width: 100,
+            height: 110,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 image: const DecorationImage(
@@ -51,12 +51,12 @@ class _SplashScreenState extends State<SplashScreen> {
           ),
         ),
         Center(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 5),
-            child: Text(
-              appName,
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
+          child: Text(
+            appName,
+            style: Theme.of(context)
+                .textTheme
+                .titleMedium!
+                .copyWith(color: Colors.black45, fontWeight: FontWeight.bold),
           ),
         )
       ],

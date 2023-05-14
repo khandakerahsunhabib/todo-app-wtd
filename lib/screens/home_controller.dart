@@ -52,17 +52,17 @@ class HomeController extends GetxController {
     foundToDo.clear();
     var searchingValue = searchToDoItemController.text;
     if (searchingValue.isEmpty) {
-      todoList.forEach((element) {
+      for (var element in todoList) {
         foundToDo.add(ToDo(id: element.id, todoText: element.todoText));
-      });
+      }
     } else {
-      todoList.forEach((element) {
+      for (var element in todoList) {
         if (element.todoText!
             .toLowerCase()
             .contains(searchingValue.toLowerCase())) {
           foundToDo.add(ToDo(id: element.id, todoText: element.todoText));
         } else {}
-      });
+      }
     }
   }
 }
