@@ -4,8 +4,6 @@ import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:wtd/screens/home.dart';
 import 'package:wtd/screens/splash_screen.dart';
-import 'package:wtd/widgets/empty_list.dart';
-
 import 'model/todo.dart';
 
 void main() async {
@@ -16,6 +14,7 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+  final appName = "What To Do";
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -23,11 +22,10 @@ class MyApp extends StatelessWidget {
         const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'What to do',
+      title: appName,
       getPages: [
         GetPage(name: '/', page: () => const SplashScreen()),
         GetPage(name: '/home', page: () => const Home()),
-        GetPage(name: '/empty_list', page: () => EmptyList()),
       ],
     );
   }

@@ -51,7 +51,7 @@ class HomeController extends GetxController {
   void searchToDoItem() {
     foundToDo.clear();
     var searchingValue = searchToDoItemController.text;
-    if (searchingValue.length == 0) {
+    if (searchingValue.isEmpty) {
       todoList.forEach((element) {
         foundToDo.add(ToDo(id: element.id, todoText: element.todoText));
       });

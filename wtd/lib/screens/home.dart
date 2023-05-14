@@ -71,24 +71,7 @@ class _HomeState extends State<Home> {
           foregroundColor: tdGrey,
           elevation: 0,
         ),
-        drawer: Drawer(
-          child: ListView(
-            children: const [
-              DrawerHeader(
-                decoration: BoxDecoration(color: Colors.blue),
-                child: Text('WTD (What To Do)'),
-              ),
-              ListTile(
-                leading: Icon(Icons.home),
-                title: Text('Home Page'),
-              ),
-              ListTile(
-                leading: Icon(Icons.person),
-                title: Text('About Us'),
-              )
-            ],
-          ),
-        ),
+        drawer: _myDrawer(),
         body: Stack(
           children: [
             Container(
@@ -272,7 +255,7 @@ class _HomeState extends State<Home> {
                     margin: const EdgeInsets.only(bottom: 20, right: 20),
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                          primary: tdBlue,
+                          foregroundColor: Colors.white,
                           minimumSize: const Size(60, 60),
                           elevation: 10),
                       onPressed: () {
@@ -351,7 +334,64 @@ class _HomeState extends State<Home> {
 
   bool enableDisable(bool? isDone) {
     bool? status = isDone!;
-    print('status: ${status}');
+    //print('status: ${status}');
     return status;
+  }
+
+  _myDrawer() {
+    const appName = "What To Do";
+    return Drawer(
+      backgroundColor: drawerBgColor,
+      child: ListView(
+        children: [
+          DrawerHeader(
+            decoration: BoxDecoration(color: Colors.blue.shade100),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 100,
+                  height: 100,
+                  decoration: const BoxDecoration(
+                      //color: Colors.blue,
+                      image: DecorationImage(
+                          fit: BoxFit.contain,
+                          image: AssetImage('assets/images/wtd-logo.png'))),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 3),
+                  child: Text(
+                    appName,
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                )
+              ],
+            ),
+          ),
+          const ListTile(
+            leading: Icon(Icons.person_2_outlined),
+            title: Text('About Developer'),
+          ),
+          const Divider(
+            height: 1,
+          ),
+          const ListTile(
+            leading: Icon(Icons.star_border_outlined),
+            title: Text('Rate Us'),
+          ),
+          const Divider(
+            height: 1,
+          ),
+          ListTile(
+            leading: const Icon(Icons.exit_to_app),
+            title: const Text('Exit App'),
+            onTap: () {
+              exit(0);
+            },
+          )
+        ],
+      ),
+    );
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wtd/constants/colors.dart';
 import 'package:wtd/screens/home_controller.dart';
+
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
   @override
@@ -9,7 +10,8 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  final HomeController _controller=Get.put(HomeController());
+  final HomeController _controller = Get.put(HomeController());
+  final appName = "What To Do";
 
   @override
   void initState() {
@@ -22,71 +24,69 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       backgroundColor: tdBGColor,
       body: Container(
-        margin: const EdgeInsets.only(top: 50),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            _upperPart(),
-            _lowerPart(),
-          ],
-        )
-      ),
+          margin: const EdgeInsets.only(top: 50),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              _upperPart(),
+              _lowerPart(),
+            ],
+          )),
     );
-    _controller.loadToDoItemListData();
   }
+
   _upperPart() {
     return Column(
-      children:[
+      children: [
         Center(
           child: Container(
-            width: 120,
-            height: 120,
+            width: 150,
+            height: 140,
             decoration: BoxDecoration(
-                color: Colors.green,
-                borderRadius: BorderRadius.circular(60),
-                image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: AssetImage('assets/images/wtd-logo.png')
-                )
-            ),
+                borderRadius: BorderRadius.circular(10),
+                image: const DecorationImage(
+                    fit: BoxFit.contain,
+                    image: AssetImage('assets/images/wtd-logo.png'))),
           ),
         ),
-        const Center(
+        Center(
           child: Padding(
-            padding: EdgeInsets.all(10.0),
-            child: Text('What to do', style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.black54
-            ),),
+            padding: const EdgeInsets.only(top: 5),
+            child: Text(
+              appName,
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
           ),
         )
       ],
     );
   }
+
   _lowerPart() {
-    return Column(
+    return const Column(
       children: [
         CircularProgressIndicator(
           strokeWidth: 5,
         ),
         Padding(
-          padding: const EdgeInsets.only(top:20, bottom: 5),
+          padding: EdgeInsets.only(top: 20, bottom: 5),
           child: Center(
-            child: Text('Simple ToDo App', style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Colors.grey
-            ),),
+            child: Text(
+              'Simple ToDo App',
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey),
+            ),
           ),
         ),
         Center(
-          child: Text('To Make Your Task Simple', style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Colors.grey
-          ),),
+          child: Text(
+            'To Make Your Task Simple',
+            style: TextStyle(
+                fontSize: 16, fontWeight: FontWeight.bold, color: Colors.grey),
+          ),
         ),
       ],
     );
