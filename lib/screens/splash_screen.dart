@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:wtd/constants/colors.dart';
 import 'package:wtd/screens/home_controller.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key? key}) : super(key: key); 
+  const SplashScreen({Key? key}) : super(key: key);
   @override
   State<SplashScreen> createState() => _SplashScreenState();
 }
@@ -22,8 +21,12 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: tdBGColor,
       body: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.topRight,
+                  colors: [Colors.blue.shade200, Colors.grey.shade300])),
           margin: const EdgeInsets.only(top: 50),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -76,8 +79,8 @@ class _SplashScreenState extends State<SplashScreen> {
               'Simple ToDo App',
               style: TextStyle(
                   fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey),
+                  color: Colors.black26,
+                  fontWeight: FontWeight.bold),
             ),
           ),
         ),
@@ -85,7 +88,9 @@ class _SplashScreenState extends State<SplashScreen> {
           child: Text(
             'To Make Your Task Simple',
             style: TextStyle(
-                fontSize: 16, fontWeight: FontWeight.bold, color: Colors.grey),
+                fontSize: 16,
+                color: Colors.black26,
+                fontWeight: FontWeight.bold),
           ),
         ),
       ],

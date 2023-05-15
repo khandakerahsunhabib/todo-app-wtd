@@ -18,7 +18,7 @@ class _HomeState extends State<Home> {
   final HomeController _controller = Get.put(HomeController());
   bool _canPop = false;
   final appName = 'What To Do';
-  final description = 'A todo app to make your task simple';
+  final version = 'App Version: 1.0.0';
   ToDo? todo;
 
   @override
@@ -68,29 +68,20 @@ class _HomeState extends State<Home> {
       },
       child: Scaffold(
         backgroundColor: tdBGColor,
-        appBar: AppBar(
-          backgroundColor: tdBGColor,
-          foregroundColor: tdGrey,
-          elevation: 0,
-        ),
-        drawer: myDrawer(appName, description, context),
-        body: Stack(
-          children: [
-            Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    searchField(_controller, 'search'),
-                    headingWidget(),
-                    totalTaskCount(),
-                    todoList(setState),
-                    addTaskField(_controller)
-                  ],
-                )),
-          ],
-        ),
+        appBar: appBar(),
+        drawer: myDrawer(appName, version, context),
+        body: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                searchField(_controller, 'search'),
+                headingWidget(),
+                totalTaskCount(),
+                todoList(setState),
+                addTaskField(_controller)
+              ],
+            )),
       ),
     );
   }

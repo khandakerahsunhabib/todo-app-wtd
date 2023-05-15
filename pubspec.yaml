@@ -3,7 +3,7 @@ description: What to do (WTD) is a todo app to save your daily task
 
 publish_to: 'none'
 
-version: 1.0.0+1
+version: 1.0.0
 
 environment:
   sdk: '>=2.18.0-362.0.dev <3.0.0'

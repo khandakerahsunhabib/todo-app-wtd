@@ -5,20 +5,24 @@ import 'package:wtd/constants/colors.dart';
 import 'package:wtd/model/todo.dart';
 import 'package:wtd/screens/home_controller.dart';
 
-Drawer myDrawer(String appName, String description, BuildContext context) {
+Drawer myDrawer(String appName, String version, BuildContext context) {
   return Drawer(
     backgroundColor: drawerBgColor,
     child: ListView(
       children: [
         DrawerHeader(
-          decoration: BoxDecoration(color: Colors.blue.shade100),
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.topRight,
+                  colors: [Colors.blue.shade200, Colors.grey.shade300])),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
                 width: 80,
-                height: 80,
+                height: 75,
                 decoration: const BoxDecoration(
                     //color: Colors.blue,
                     image: DecorationImage(
@@ -32,7 +36,7 @@ Drawer myDrawer(String appName, String description, BuildContext context) {
               Padding(
                 padding: const EdgeInsets.only(top: 5),
                 child: Text(
-                  description,
+                  version,
                   style: Theme.of(context).textTheme.labelMedium,
                 ),
               )
@@ -41,7 +45,7 @@ Drawer myDrawer(String appName, String description, BuildContext context) {
         ),
         const ListTile(
           leading: Icon(Icons.person_2_outlined),
-          title: Text('About Developer'),
+          title: Text('About Us'),
         ),
         const Divider(
           height: 1,
@@ -49,6 +53,20 @@ Drawer myDrawer(String appName, String description, BuildContext context) {
         const ListTile(
           leading: Icon(Icons.star_border_outlined),
           title: Text('Rate Us'),
+        ),
+        const Divider(
+          height: 1,
+        ),
+        const ListTile(
+          leading: Icon(Icons.privacy_tip_outlined),
+          title: Text('Privacy Policy'),
+        ),
+        const Divider(
+          height: 1,
+        ),
+        const ListTile(
+          leading: Icon(Icons.share_sharp),
+          title: Text('Share App'),
         ),
         const Divider(
           height: 1,
@@ -199,7 +217,7 @@ Widget headingWidget() {
 Widget totalTaskCount() {
   final HomeController controller = Get.put(HomeController());
   return Container(
-    margin: const EdgeInsets.only(bottom: 5),
+    margin: const EdgeInsets.only(bottom: 10),
     height: 40,
     width: double.infinity,
     alignment: Alignment.center,
@@ -252,7 +270,7 @@ Widget todoList(Function setState) {
                       });
                     },
                     contentPadding:
-                        const EdgeInsets.symmetric(horizontal: 20, vertical: 2),
+                        const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
                     tileColor: Colors.white,
                     leading: controller.todoList[index].isDone!
                         ? const Icon(
@@ -266,7 +284,7 @@ Widget todoList(Function setState) {
                     trailing: Container(
                       padding: const EdgeInsets.all(0),
                       margin: const EdgeInsets.symmetric(
-                        vertical: 11,
+                        vertical: 10,
                       ),
                       width: 38,
                       height: 40,
@@ -297,4 +315,19 @@ Widget todoList(Function setState) {
               ),
             ),
           )));
+}
+
+AppBar appBar() {
+  return AppBar(
+    backgroundColor: tdBGColor,
+    foregroundColor: Colors.grey,
+    elevation: 0,
+    title: Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        IconButton(onPressed: () {}, icon: const Icon(Icons.settings))
+      ],
+    ),
+  );
 }
