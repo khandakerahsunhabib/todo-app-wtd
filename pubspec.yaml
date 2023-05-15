@@ -23,7 +23,13 @@ dev_dependencies:
   flutter_lints: ^2.0.0
   hive_generator: ^2.0.0
   build_runner: ^2.3.3
+  flutter_launcher_icons: ^0.13.1
 
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/wtd-logo.png"
+  
 flutter:
   uses-material-design: true
   assets:
