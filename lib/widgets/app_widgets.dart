@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:wtd/constants/colors.dart';
 import 'package:wtd/model/todo.dart';
 import 'package:wtd/screens/home_controller.dart';
@@ -50,9 +51,10 @@ Drawer myDrawer(String appName, String version, BuildContext context) {
         const Divider(
           height: 1,
         ),
-        const ListTile(
-          leading: Icon(Icons.star_border_outlined),
-          title: Text('Rate Us'),
+        ListTile(
+          leading: const Icon(Icons.star_border_outlined),
+          title: const Text('Rate Us'),
+          onTap: () {},
         ),
         const Divider(
           height: 1,
@@ -64,9 +66,13 @@ Drawer myDrawer(String appName, String version, BuildContext context) {
         const Divider(
           height: 1,
         ),
-        const ListTile(
-          leading: Icon(Icons.share_sharp),
-          title: Text('Share App'),
+        ListTile(
+          leading: const Icon(Icons.share_sharp),
+          title: const Text('Share App'),
+          onTap: () async {
+            await Share.share('Share this text',
+                subject: 'any subject if you have');
+          },
         ),
         const Divider(
           height: 1,
