@@ -1,10 +1,12 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:wtd/constants/colors.dart';
 import 'package:wtd/model/todo.dart';
 import 'package:wtd/screens/home_controller.dart';
+import 'package:wtd/widgets/drawer_tile.dart';
 
 Drawer myDrawer(String appName, String version, BuildContext context) {
   return Drawer(
@@ -44,46 +46,44 @@ Drawer myDrawer(String appName, String version, BuildContext context) {
             ],
           ),
         ),
-        const ListTile(
-          leading: Icon(Icons.person_2_outlined),
-          title: Text('About Us'),
+        DrawerTile(
+          leading: Icons.person_2_outlined,
+          title: 'About Us',
+          ontap: () {},
         ),
         const Divider(
           height: 1,
         ),
-        ListTile(
-          leading: const Icon(Icons.star_border_outlined),
-          title: const Text('Rate Us'),
-          onTap: () {},
-        ),
+        DrawerTile(
+            leading: Icons.star_border_outlined,
+            title: 'Rate Us',
+            ontap: () {}),
         const Divider(
           height: 1,
         ),
-        const ListTile(
-          leading: Icon(Icons.privacy_tip_outlined),
-          title: Text('Privacy Policy'),
-        ),
+        DrawerTile(
+            leading: Icons.privacy_tip_outlined,
+            title: 'Privacy Policy',
+            ontap: () {}),
         const Divider(
           height: 1,
         ),
-        ListTile(
-          leading: const Icon(Icons.share_sharp),
-          title: const Text('Share App'),
-          onTap: () async {
-            await Share.share('Share this text',
-                subject: 'any subject if you have');
-          },
-        ),
+        DrawerTile(
+            leading: Icons.share_sharp,
+            title: 'Share App',
+            ontap: () async {
+              await Share.share('Share this text',
+                  subject: 'any subject if you have');
+            }),
         const Divider(
           height: 1,
         ),
-        ListTile(
-          leading: const Icon(Icons.exit_to_app),
-          title: const Text('Exit App'),
-          onTap: () {
-            exit(0);
-          },
-        )
+        DrawerTile(
+            leading: Icons.exit_to_app,
+            title: 'Close App',
+            ontap: () {
+              exit(0);
+            })
       ],
     ),
   );
@@ -156,36 +156,10 @@ Widget addTaskField(HomeController controller) {
                 elevation: 10),
             onPressed: () {
               if (controller.todoController.text.isEmpty) {
-                Get.showSnackbar(
-                  const GetSnackBar(
-                    message: 'Please Add Your Task!',
-                    icon: Icon(
-                      Icons.announcement,
-                      color: Colors.white,
-                    ),
-                    duration: Duration(seconds: 2),
-                    snackPosition: SnackPosition.TOP,
-                    backgroundColor: tdBlack,
-                    margin: EdgeInsets.all(20),
-                    borderRadius: 10,
-                  ),
-                );
+                toast('Please add task', Colors.red, Colors.white);
               } else {
                 controller.addToDoItem();
-                Get.showSnackbar(
-                  const GetSnackBar(
-                    message: 'Task Added Successfully!',
-                    snackPosition: SnackPosition.TOP,
-                    duration: Duration(seconds: 2),
-                    backgroundColor: tdBlack,
-                    margin: EdgeInsets.all(20),
-                    borderRadius: 10,
-                    icon: Icon(
-                      Icons.done,
-                      color: Colors.white,
-                    ),
-                  ),
-                );
+                toast('Task added', Colors.green, Colors.white);
               }
             },
             child: const Text(
@@ -336,4 +310,15 @@ AppBar appBar() {
       ],
     ),
   );
+}
+
+toast(String msg, Color color, Color txtColor) {
+  Fluttertoast.showToast(
+      msg: msg,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.CENTER,
+      timeInSecForIosWeb: 1,
+      backgroundColor: color,
+      textColor: txtColor,
+      fontSize: 16.0);
 }
