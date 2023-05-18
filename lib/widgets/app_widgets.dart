@@ -8,6 +8,17 @@ import 'package:wtd/model/todo.dart';
 import 'package:wtd/screens/home_controller.dart';
 import 'package:wtd/widgets/drawer_tile.dart';
 
+String currentRoute = "/";
+
+void doRoute(BuildContext context, String name) {
+  if (currentRoute != name) {
+    Navigator.pushReplacementNamed(context, name);
+  } else {
+    Navigator.pop(context);
+    currentRoute = name;
+  }
+}
+
 Drawer myDrawer(String appName, String version, BuildContext context) {
   return Drawer(
     backgroundColor: drawerBgColor,
@@ -47,9 +58,21 @@ Drawer myDrawer(String appName, String version, BuildContext context) {
           ),
         ),
         DrawerTile(
+          leading: Icons.home,
+          title: 'Home',
+          ontap: () {
+            doRoute(context, '/home');
+          },
+        ),
+        const Divider(
+          height: 1,
+        ),
+        DrawerTile(
           leading: Icons.person_2_outlined,
-          title: 'About Us',
-          ontap: () {},
+          title: 'About Developer',
+          ontap: () {
+            doRoute(context, '/about_us');
+          },
         ),
         const Divider(
           height: 1,
@@ -57,14 +80,18 @@ Drawer myDrawer(String appName, String version, BuildContext context) {
         DrawerTile(
             leading: Icons.star_border_outlined,
             title: 'Rate Us',
-            ontap: () {}),
+            ontap: () {
+              doRoute(context, 'rate_us');
+            }),
         const Divider(
           height: 1,
         ),
         DrawerTile(
             leading: Icons.privacy_tip_outlined,
             title: 'Privacy Policy',
-            ontap: () {}),
+            ontap: () {
+              doRoute(context, 'privacy_policy');
+            }),
         const Divider(
           height: 1,
         ),
@@ -274,6 +301,7 @@ Widget todoList(Function setState) {
                       child: IconButton(
                         onPressed: () {
                           controller.deleteDataByIndex(index);
+                          toast('Task Deleted', Colors.red, Colors.white);
                         },
                         icon: const Icon(
                           Icons.delete,
@@ -315,8 +343,8 @@ AppBar appBar() {
 toast(String msg, Color color, Color txtColor) {
   Fluttertoast.showToast(
       msg: msg,
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.CENTER,
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.TOP,
       timeInSecForIosWeb: 1,
       backgroundColor: color,
       textColor: txtColor,
