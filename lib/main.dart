@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:wtd/screens/about_us.dart';
 import 'package:wtd/screens/home.dart';
+import 'package:wtd/screens/privacy_policy.dart';
 import 'package:wtd/screens/splash_screen.dart';
 import 'model/todo.dart';
 
@@ -27,7 +28,8 @@ class MyApp extends StatelessWidget {
       getPages: [
         GetPage(name: '/', page: () => const SplashScreen()),
         GetPage(name: '/home', page: () => const Home()),
-        GetPage(name: '/about_us', page: () => const AboutUs())
+        GetPage(name: '/about_us', page: () => const AboutUs()),
+        GetPage(name: '/privacy_policy', page: () => const PrivacyPolicy())
       ],
     );
   }

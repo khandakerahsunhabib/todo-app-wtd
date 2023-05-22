@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import '../model/todo.dart';
 import 'home.dart';
 
@@ -9,6 +10,7 @@ class HomeController extends GetxController {
   final searchToDoItemController = TextEditingController();
   var todoList = <ToDo>[].obs;
   var foundToDo = <ToDo>[].obs;
+  String currentRoute = "/";
 
   void addToDoItem() async {
     var box = await Hive.openBox<ToDo>('todoBox');
@@ -70,5 +72,23 @@ class HomeController extends GetxController {
     bool? status = isDone!;
     //print('status: ${status}');
     return status;
+  }
+
+  void doRoute(BuildContext context, String name) {
+    if (currentRoute != name) {
+      Navigator.pushReplacementNamed(context, name);
+    } else {
+      Navigator.pop(context);
+      currentRoute = name;
+    }
+  }
+
+  void rateApp() async {
+    const url = 'https://play.google.com/store/apps';
+    if (await canLaunchUrlString(url)) {
+      await launchUrlString(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }

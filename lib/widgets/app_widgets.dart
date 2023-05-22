@@ -8,16 +8,7 @@ import 'package:wtd/model/todo.dart';
 import 'package:wtd/screens/home_controller.dart';
 import 'package:wtd/widgets/drawer_tile.dart';
 
-String currentRoute = "/";
-
-void doRoute(BuildContext context, String name) {
-  if (currentRoute != name) {
-    Navigator.pushReplacementNamed(context, name);
-  } else {
-    Navigator.pop(context);
-    currentRoute = name;
-  }
-}
+final HomeController controller = Get.put(HomeController());
 
 Drawer myDrawer(String appName, String version, BuildContext context) {
   return Drawer(
@@ -61,7 +52,7 @@ Drawer myDrawer(String appName, String version, BuildContext context) {
           leading: Icons.home,
           title: 'Home',
           ontap: () {
-            doRoute(context, '/home');
+            controller.doRoute(context, '/home');
           },
         ),
         const Divider(
@@ -71,7 +62,7 @@ Drawer myDrawer(String appName, String version, BuildContext context) {
           leading: Icons.person_2_outlined,
           title: 'About Developer',
           ontap: () {
-            doRoute(context, '/about_us');
+            controller.doRoute(context, '/about_us');
           },
         ),
         const Divider(
@@ -81,7 +72,7 @@ Drawer myDrawer(String appName, String version, BuildContext context) {
             leading: Icons.star_border_outlined,
             title: 'Rate Us',
             ontap: () {
-              doRoute(context, 'rate_us');
+              controller.rateApp();
             }),
         const Divider(
           height: 1,
@@ -90,7 +81,7 @@ Drawer myDrawer(String appName, String version, BuildContext context) {
             leading: Icons.privacy_tip_outlined,
             title: 'Privacy Policy',
             ontap: () {
-              doRoute(context, 'privacy_policy');
+              controller.doRoute(context, '/privacy_policy');
             }),
         const Divider(
           height: 1,
@@ -165,9 +156,9 @@ Widget addTaskField(HomeController controller) {
             textAlign: TextAlign.center,
             controller: controller.todoController,
             decoration: const InputDecoration(
-              hintText: 'Add your task here',
+              hintText: "Enter your task here",
               hintStyle: TextStyle(
-                color: tdBlue,
+                color: tdGrey,
                 fontSize: 16,
               ),
               border: InputBorder.none,
@@ -183,7 +174,7 @@ Widget addTaskField(HomeController controller) {
                 elevation: 10),
             onPressed: () {
               if (controller.todoController.text.isEmpty) {
-                toast('Please add task', Colors.red, Colors.white);
+                toast("You didn't input anything!", Colors.blue, Colors.white);
               } else {
                 controller.addToDoItem();
                 toast('Task added', Colors.green, Colors.white);
@@ -342,11 +333,12 @@ AppBar appBar() {
 
 toast(String msg, Color color, Color txtColor) {
   Fluttertoast.showToast(
-      msg: msg,
-      toastLength: Toast.LENGTH_LONG,
-      gravity: ToastGravity.TOP,
-      timeInSecForIosWeb: 1,
-      backgroundColor: color,
-      textColor: txtColor,
-      fontSize: 16.0);
+    msg: msg,
+    toastLength: Toast.LENGTH_LONG,
+    gravity: ToastGravity.TOP,
+    timeInSecForIosWeb: 1,
+    backgroundColor: color,
+    textColor: txtColor,
+    fontSize: 16.0,
+  );
 }
