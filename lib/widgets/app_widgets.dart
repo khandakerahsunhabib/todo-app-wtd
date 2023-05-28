@@ -109,130 +109,69 @@ Drawer myDrawer(String appName, String version, BuildContext context) {
 
 Widget searchField(HomeController controller, String hintText) {
   return Container(
+    width: double.infinity,
+    height: 50,
     padding: const EdgeInsets.symmetric(horizontal: 15),
     decoration: BoxDecoration(
-        color: Colors.white, borderRadius: BorderRadius.circular(20)),
+        border: Border.all(
+            width: 1, style: BorderStyle.solid, color: Colors.blueAccent),
+        color: tdBGColor,
+        borderRadius: BorderRadius.circular(20)),
     child: TextField(
       onChanged: (value) {
         controller.searchToDoItem();
       },
       controller: controller.searchToDoItemController,
       decoration: InputDecoration(
-          contentPadding: const EdgeInsets.all(0),
-          prefixIcon: const Icon(
-            Icons.search,
-            color: tdBlack,
-            size: 20,
-          ),
+          contentPadding: const EdgeInsets.only(left: 20),
           prefixIconConstraints:
               const BoxConstraints(maxHeight: 20, minWidth: 25),
           border: InputBorder.none,
           hintText: hintText,
-          hintStyle: const TextStyle(color: tdGrey)),
+          hintStyle: const TextStyle(color: tdGrey, fontSize: 16)),
     ),
   );
 }
 
-Widget addTaskField(HomeController controller) {
-  return Align(
-    alignment: Alignment.bottomCenter,
-    child: Row(
-      children: [
-        Expanded(
-            child: Container(
-          margin: const EdgeInsets.only(bottom: 20, right: 20, left: 10),
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-          decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: const [
-                BoxShadow(
-                    color: Colors.grey,
-                    offset: Offset(0.0, 0.0),
-                    blurRadius: 10.0,
-                    spreadRadius: 0)
-              ],
-              borderRadius: BorderRadius.circular(10)),
-          child: TextField(
-            textAlign: TextAlign.center,
-            controller: controller.todoController,
-            decoration: const InputDecoration(
-              hintText: "Enter your task here",
-              hintStyle: TextStyle(
-                color: tdGrey,
-                fontSize: 16,
-              ),
-              border: InputBorder.none,
-            ),
-          ),
-        )),
-        Container(
-          margin: const EdgeInsets.only(bottom: 20, right: 10),
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,
-                minimumSize: const Size(60, 60),
-                elevation: 10),
-            onPressed: () {
-              if (controller.todoController.text.isEmpty) {
-                toast("You didn't input anything!", Colors.blue, Colors.white);
-              } else {
-                controller.addToDoItem();
-                toast('Task added', Colors.green, Colors.white);
-              }
-            },
-            child: const Text(
-              '+',
-              style: TextStyle(fontSize: 40),
-            ),
-          ),
-        )
-      ],
-    ),
-  );
-}
-
-Widget headingWidget() {
+Widget headingAndTotalTaskCount() {
   const listTitle = 'My Task List';
-  return Container(
-    alignment: Alignment.center,
-    width: double.infinity,
-    height: 40,
-    margin: const EdgeInsets.only(top: 40),
-    child: const Padding(
-      padding: EdgeInsets.only(left: 8),
-      child: Text(
-        listTitle,
-        style: TextStyle(
-            fontSize: 35,
-            fontWeight: FontWeight.bold,
-            color: Colors.blueGrey,
-            fontFamily: 'MYRIADPRO'),
+  return Column(
+    children: [
+      Container(
+        alignment: Alignment.center,
+        width: double.infinity,
+        height: 42,
+        child: const Padding(
+          padding: EdgeInsets.only(left: 8),
+          child: Text(
+            listTitle,
+            style: TextStyle(
+                fontSize: 35,
+                fontWeight: FontWeight.bold,
+                color: Colors.blueGrey,
+                fontFamily: 'MYRIADPRO'),
+          ),
+        ),
       ),
-    ),
-  );
-}
-
-Widget totalTaskCount() {
-  final HomeController controller = Get.put(HomeController());
-  return Container(
-    margin: const EdgeInsets.only(bottom: 10),
-    height: 40,
-    width: double.infinity,
-    alignment: Alignment.center,
-    child: Obx(
-      () => Text(
-        'Total task added: ${controller.todoList.length.toString()}',
-        style: const TextStyle(
-            fontFamily: 'MYRIADPRO', fontSize: 16, color: Colors.blueGrey),
-      ),
-    ),
+      Container(
+        height: 20,
+        width: double.infinity,
+        alignment: Alignment.center,
+        child: Obx(
+          () => Text(
+            'Total task added: ${controller.todoList.length.toString()}',
+            style: const TextStyle(
+                fontFamily: 'MYRIADPRO', fontSize: 16, color: Colors.blueGrey),
+          ),
+        ),
+      )
+    ],
   );
 }
 
 Widget todoList(Function setState) {
   final HomeController controller = Get.put(HomeController());
   return Expanded(
-      flex: 1,
       child: Obx(() => ListView.builder(
             itemCount: controller.foundToDo.length,
             itemBuilder: (context, index) => Container(
@@ -319,7 +258,7 @@ Widget todoList(Function setState) {
 AppBar appBar() {
   return AppBar(
     backgroundColor: tdBGColor,
-    foregroundColor: Colors.grey,
+    foregroundColor: Colors.blue,
     elevation: 0,
     title: Row(
       mainAxisAlignment: MainAxisAlignment.end,
@@ -340,5 +279,63 @@ toast(String msg, Color color, Color txtColor) {
     backgroundColor: color,
     textColor: txtColor,
     fontSize: 16.0,
+  );
+}
+
+Widget addTaskField(HomeController controller) {
+  return Align(
+    alignment: Alignment.bottomCenter,
+    child: Row(
+      children: [
+        Expanded(
+            child: Container(
+          margin: const EdgeInsets.only(bottom: 20, right: 20, left: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: const [
+                BoxShadow(
+                    color: Colors.grey,
+                    offset: Offset(0.0, 0.0),
+                    blurRadius: 10.0,
+                    spreadRadius: 0)
+              ],
+              borderRadius: BorderRadius.circular(10)),
+          child: TextField(
+            textAlign: TextAlign.center,
+            controller: controller.todoController,
+            decoration: const InputDecoration(
+              hintText: "Enter your task here",
+              hintStyle: TextStyle(
+                color: tdGrey,
+                fontSize: 16,
+              ),
+              border: InputBorder.none,
+            ),
+          ),
+        )),
+        Container(
+          margin: const EdgeInsets.only(bottom: 20, right: 10),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                minimumSize: const Size(60, 60),
+                elevation: 10),
+            onPressed: () {
+              if (controller.todoController.text.isEmpty) {
+                toast("You didn't input anything!", Colors.blue, Colors.white);
+              } else {
+                controller.addToDoItem();
+                toast('Task added', Colors.green, Colors.white);
+              }
+            },
+            child: const Text(
+              '+',
+              style: TextStyle(fontSize: 40),
+            ),
+          ),
+        )
+      ],
+    ),
   );
 }

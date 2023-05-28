@@ -71,18 +71,30 @@ class _HomeState extends State<Home> {
         appBar: appBar(),
         drawer: myDrawer(appName, version, context),
         body: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+            padding: const EdgeInsets.all(20),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                searchField(_controller, 'search'),
-                headingWidget(),
-                totalTaskCount(),
-                todoList(setState),
+                searchField(_controller, 'Search task here...'),
+                const Padding(padding: EdgeInsets.only(top: 40)),
+                headingAndTotalTaskCount(),
+                const Padding(padding: EdgeInsets.only(bottom: 20)),
+                Obx(
+                  () => Container(
+                    child: controller.foundToDo.isEmpty
+                        ? _emptyList()
+                        : todoList(setState),
+                  ),
+                ),
                 addTaskField(_controller)
               ],
             )),
       ),
     );
+  }
+
+  _emptyList() {
+    return const Expanded(child: Center(child: Text('List is Empty')));
   }
 }
