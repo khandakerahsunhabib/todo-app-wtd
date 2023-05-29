@@ -76,9 +76,9 @@ class _HomeState extends State<Home> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                searchField(_controller, 'Search task here...'),
+                searchField(_controller, 'search your task here...'),
                 const Padding(padding: EdgeInsets.only(top: 40)),
-                headingAndTotalTaskCount(),
+                headingAndTotalTaskCount(context),
                 const Padding(padding: EdgeInsets.only(bottom: 20)),
                 Obx(
                   () => Container(

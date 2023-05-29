@@ -114,7 +114,7 @@ Widget searchField(HomeController controller, String hintText) {
     padding: const EdgeInsets.symmetric(horizontal: 15),
     decoration: BoxDecoration(
         border: Border.all(
-            width: 1, style: BorderStyle.solid, color: Colors.blueAccent),
+            width: 1, style: BorderStyle.solid, color: Colors.blue.shade200),
         color: tdBGColor,
         borderRadius: BorderRadius.circular(20)),
     child: TextField(
@@ -128,41 +128,59 @@ Widget searchField(HomeController controller, String hintText) {
               const BoxConstraints(maxHeight: 20, minWidth: 25),
           border: InputBorder.none,
           hintText: hintText,
-          hintStyle: const TextStyle(color: tdGrey, fontSize: 16)),
+          hintStyle: TextStyle(color: Colors.grey.shade500, fontSize: 16)),
     ),
   );
 }
 
-Widget headingAndTotalTaskCount() {
+Widget headingAndTotalTaskCount(BuildContext context) {
   const listTitle = 'My Task List';
+  const totalTaskTitle = 'Total task added ';
+
   return Column(
     children: [
       Container(
         alignment: Alignment.center,
         width: double.infinity,
         height: 42,
-        child: const Padding(
-          padding: EdgeInsets.only(left: 8),
-          child: Text(
-            listTitle,
-            style: TextStyle(
-                fontSize: 35,
-                fontWeight: FontWeight.bold,
-                color: Colors.blueGrey,
-                fontFamily: 'MYRIADPRO'),
-          ),
+        child: Padding(
+          padding: const EdgeInsets.only(left: 8),
+          child: Text(listTitle,
+              style: Theme.of(context).textTheme.headlineLarge!.copyWith(
+                  color: Colors.blue,
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'MYRIADPRO')),
         ),
       ),
       Container(
-        height: 20,
+        height: 30,
         width: double.infinity,
         alignment: Alignment.center,
         child: Obx(
-          () => Text(
-            'Total task added: ${controller.todoList.length.toString()}',
-            style: const TextStyle(
-                fontFamily: 'MYRIADPRO', fontSize: 16, color: Colors.blueGrey),
-          ),
+          () => Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(totalTaskTitle,
+                    style: Theme.of(context)
+                        .textTheme
+                        .labelLarge!
+                        .copyWith(color: Colors.black38)),
+                Container(
+                  alignment: Alignment.center,
+                  width: 30,
+                  height: 30,
+                  decoration: BoxDecoration(
+                      color: Colors.green,
+                      borderRadius: BorderRadius.circular(30)),
+                  child: Text(
+                    controller.todoList.length.toString(),
+                    style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
+                )
+              ]),
         ),
       )
     ],
@@ -181,7 +199,8 @@ Widget todoList(Function setState) {
                 children: [
                   ListTile(
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25)),
+                      borderRadius: BorderRadius.circular(25),
+                    ),
                     onTap: () {
                       setState(() {
                         if (controller.todoList[index].isDone == false) {
@@ -208,15 +227,15 @@ Widget todoList(Function setState) {
                     },
                     contentPadding:
                         const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                    tileColor: Colors.white,
+                    tileColor: Colors.white30,
                     leading: controller.todoList[index].isDone!
                         ? const Icon(
                             Icons.check_box,
-                            color: tdBlue,
+                            color: Colors.blue,
                           )
                         : const Icon(
                             Icons.check_box_outline_blank,
-                            color: tdBlue,
+                            color: Colors.blue,
                           ),
                     trailing: Container(
                       padding: const EdgeInsets.all(0),
