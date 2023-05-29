@@ -169,15 +169,17 @@ Widget headingAndTotalTaskCount(BuildContext context) {
                         .copyWith(color: Colors.black38)),
                 Container(
                   alignment: Alignment.center,
-                  width: 30,
-                  height: 30,
+                  width: 28,
+                  height: 28,
                   decoration: BoxDecoration(
-                      color: Colors.green,
-                      borderRadius: BorderRadius.circular(30)),
+                      color: Colors.blue[300],
+                      borderRadius: BorderRadius.circular(20)),
                   child: Text(
                     controller.todoList.length.toString(),
                     style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                        color: Colors.white, fontWeight: FontWeight.bold),
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15),
                   ),
                 )
               ]),

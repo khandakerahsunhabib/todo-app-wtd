@@ -95,6 +95,14 @@ class _HomeState extends State<Home> {
   }
 
   _emptyList() {
-    return const Expanded(child: Center(child: Text('List is Empty')));
+    return Expanded(
+        child: Center(
+            child: Text(
+      'List is Empty!',
+      style: Theme.of(context)
+          .textTheme
+          .bodyLarge!
+          .copyWith(color: Colors.black12, fontSize: 18),
+    )));
   }
 }
