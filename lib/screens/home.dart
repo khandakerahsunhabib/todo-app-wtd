@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 import 'package:wtd/widgets/app_widgets.dart';
 import '../model/todo.dart';
 import '../screens/home_controller.dart';
@@ -96,13 +97,6 @@ class _HomeState extends State<Home> {
 
   _emptyList() {
     return Expanded(
-        child: Center(
-            child: Text(
-      'List is Empty!',
-      style: Theme.of(context)
-          .textTheme
-          .bodyLarge!
-          .copyWith(color: Colors.black12, fontSize: 18),
-    )));
+        child: Center(child: Lottie.asset('assets/animations/no-data-new.json')));
   }
 }

@@ -294,7 +294,7 @@ AppBar appBar() {
 toast(String msg, Color color, Color txtColor) {
   Fluttertoast.showToast(
     msg: msg,
-    toastLength: Toast.LENGTH_LONG,
+    toastLength: Toast.LENGTH_SHORT,
     gravity: ToastGravity.TOP,
     timeInSecForIosWeb: 1,
     backgroundColor: color,
@@ -344,7 +344,7 @@ Widget addTaskField(HomeController controller) {
                 elevation: 10),
             onPressed: () {
               if (controller.todoController.text.isEmpty) {
-                toast("You didn't input anything!", Colors.blue, Colors.white);
+                toast("Please add task", Colors.green, Colors.white);
               } else {
                 controller.addToDoItem();
                 toast('Task added', Colors.green, Colors.white);

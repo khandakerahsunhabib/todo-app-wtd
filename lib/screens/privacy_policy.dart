@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import '../constants/colors.dart';
 import '../widgets/app_widgets.dart';
 
@@ -11,12 +10,11 @@ class PrivacyPolicy extends StatelessWidget {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        Get.back();
-        return true;
+        return false;
       },
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: tdBlue,
+          backgroundColor: Colors.blue,
           elevation: 0,
           title: const Text('Privacy Policy'),
           centerTitle: true,

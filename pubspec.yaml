@@ -21,6 +21,7 @@ dependencies:
   http: ^0.13.6
   fluttertoast: ^8.2.1
   url_launcher: ^6.1.11
+  lottie: ^2.3.2
 
 dev_dependencies:
   flutter_test:
@@ -40,6 +41,8 @@ flutter:
   assets:
    - assets/images/
    - assets/images/habib.jpg
+   - assets/animations/
+   
   fonts:
     - family: MYRIADPRO
       fonts:
