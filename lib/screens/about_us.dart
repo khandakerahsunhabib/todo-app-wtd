@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:wtd/constants/colors.dart';
 import 'package:wtd/widgets/app_widgets.dart';
 
 class AboutUs extends StatelessWidget {

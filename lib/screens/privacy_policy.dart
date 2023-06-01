@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../constants/colors.dart';
 import '../widgets/app_widgets.dart';
 
 class PrivacyPolicy extends StatelessWidget {
