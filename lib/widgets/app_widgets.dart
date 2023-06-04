@@ -90,7 +90,8 @@ Drawer myDrawer(String appName, String version, BuildContext context) {
             leading: Icons.share_sharp,
             title: 'Share App',
             ontap: () async {
-              await Share.share('Share this text',
+              await Share.share(
+                  'https://play.google.com/store/apps/details?id=com.codecraft.whattodo',
                   subject: 'any subject if you have');
             }),
         const Divider(
@@ -285,7 +286,11 @@ AppBar appBar() {
       mainAxisAlignment: MainAxisAlignment.end,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        IconButton(onPressed: () {}, icon: const Icon(Icons.settings))
+        IconButton(
+            onPressed: () {
+              toast('Settings feature coming soon', Colors.grey, Colors.white);
+            },
+            icon: const Icon(Icons.settings))
       ],
     ),
   );

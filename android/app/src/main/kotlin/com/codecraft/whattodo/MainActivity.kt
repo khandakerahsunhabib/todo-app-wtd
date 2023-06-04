@@ -1,4 +1,4 @@
-package com.example.wtd
+package com.codecraft.whattodo
 
 import io.flutter.embedding.android.FlutterActivity
 

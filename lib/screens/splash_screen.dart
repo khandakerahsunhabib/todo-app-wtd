@@ -62,7 +62,7 @@ class _SplashScreenState extends State<SplashScreen> {
             style: Theme.of(context)
                 .textTheme
                 .titleMedium!
-                .copyWith(color: Colors.black45, fontWeight: FontWeight.bold),
+                .copyWith(color: Colors.blue[400], fontWeight: FontWeight.bold),
           ),
         )
       ],
@@ -70,30 +70,30 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   _lowerPart() {
-    return const Column(
+    return Column(
       children: [
-        CircularProgressIndicator(
+        const CircularProgressIndicator(
           strokeWidth: 5,
         ),
         Padding(
-          padding: EdgeInsets.only(top: 20, bottom: 5),
+          padding: const EdgeInsets.only(top: 20, bottom: 5),
           child: Center(
             child: Text(
-              'Simple ToDo App',
-              style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.black26,
-                  fontWeight: FontWeight.bold),
+              'Simple todo app',
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyLarge!
+                  .copyWith(color: Colors.blue[400]),
             ),
           ),
         ),
         Center(
           child: Text(
-            'To Make Your Task Simple',
-            style: TextStyle(
-                fontSize: 16,
-                color: Colors.black26,
-                fontWeight: FontWeight.bold),
+            'To make your task simple',
+            style: Theme.of(context)
+                .textTheme
+                .bodyLarge!
+                .copyWith(color: Colors.blue[400]),
           ),
         ),
       ],

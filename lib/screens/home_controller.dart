@@ -46,7 +46,7 @@ class HomeController extends GetxController {
   }
 
   void navigateToHomeScreen() async {
-    await Future.delayed(const Duration(seconds: 5));
+    await Future.delayed(const Duration(seconds: 3));
     Get.toNamed(Home.routeName);
   }
 
@@ -84,7 +84,8 @@ class HomeController extends GetxController {
   }
 
   void rateApp() async {
-    const url = 'https://play.google.com/store/apps';
+    const url =
+        'https://play.google.com/store/apps/details?id=com.codecraft.whattodo';
     if (await canLaunchUrlString(url)) {
       await launchUrlString(url);
     } else {
