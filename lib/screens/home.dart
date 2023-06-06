@@ -33,35 +33,41 @@ class _HomeState extends State<Home> {
           showDialog(
               context: context,
               builder: (context) => AlertDialog(
-                    title: const Text(
-                      'Alert',
-                      style: TextStyle(color: Colors.green, fontSize: 25),
+                    title: const Icon(
+                      Icons.warning_rounded,
+                      size: 50,
+                      color: Colors.green,
                     ),
-                    content: const Text(
+                    content: Text(
                       'Are you sure want to exit?',
-                      style: TextStyle(color: Colors.grey, fontSize: 18),
+                      style: Theme.of(context)
+                          .textTheme
+                          .labelLarge!
+                          .copyWith(color: Colors.blue, fontSize: 18),
                     ),
                     actions: [
                       TextButton(
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
-                          child: const Text('No',
-                              style: TextStyle(
-                                color: tdRed,
-                              ))),
+                          child: Text('No',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelMedium!
+                                  .copyWith(color: Colors.red, fontSize: 16))),
                       TextButton(
                           onPressed: () {
                             setState(() {
                               _canPop = true;
                             });
-                            //Navigator.of(context).pop();
                             exit(0);
                           },
-                          child: const Text('Yes',
-                              style: TextStyle(
-                                color: Colors.green,
-                              ))),
+                          child: Text('Yes',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelMedium!
+                                  .copyWith(
+                                      color: Colors.green, fontSize: 16))),
                     ],
                   ));
         }
@@ -78,9 +84,13 @@ class _HomeState extends State<Home> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 searchField(_controller, 'search your task here...'),
-                const Padding(padding: EdgeInsets.only(top: 40)),
+                const SizedBox(
+                  height: 40,
+                ),
                 headingAndTotalTaskCount(context),
-                const Padding(padding: EdgeInsets.only(bottom: 20)),
+                const SizedBox(
+                  height: 40,
+                ),
                 Obx(
                   () => Container(
                     child: controller.foundToDo.isEmpty
@@ -97,6 +107,7 @@ class _HomeState extends State<Home> {
 
   _emptyList() {
     return Expanded(
-        child: Center(child: Lottie.asset('assets/animations/no-data-new.json')));
+        child:
+            Center(child: Lottie.asset('assets/animations/no-data-new.json')));
   }
 }

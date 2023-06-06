@@ -143,7 +143,7 @@ Widget headingAndTotalTaskCount(BuildContext context) {
       Container(
         alignment: Alignment.center,
         width: double.infinity,
-        height: 42,
+        height: 36,
         child: Padding(
           padding: const EdgeInsets.only(left: 8),
           child: Text(listTitle,

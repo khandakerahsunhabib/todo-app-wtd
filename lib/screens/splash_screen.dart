@@ -62,7 +62,7 @@ class _SplashScreenState extends State<SplashScreen> {
             style: Theme.of(context)
                 .textTheme
                 .titleMedium!
-                .copyWith(color: Colors.blue[400], fontWeight: FontWeight.bold),
+                .copyWith(color: Colors.black54, fontWeight: FontWeight.bold),
           ),
         )
       ],
@@ -76,14 +76,14 @@ class _SplashScreenState extends State<SplashScreen> {
           strokeWidth: 5,
         ),
         Padding(
-          padding: const EdgeInsets.only(top: 20, bottom: 5),
+          padding: const EdgeInsets.only(top: 40, bottom: 5),
           child: Center(
             child: Text(
               'Simple todo app',
               style: Theme.of(context)
                   .textTheme
                   .bodyLarge!
-                  .copyWith(color: Colors.blue[400]),
+                  .copyWith(color: Colors.black45),
             ),
           ),
         ),
@@ -93,7 +93,7 @@ class _SplashScreenState extends State<SplashScreen> {
             style: Theme.of(context)
                 .textTheme
                 .bodyLarge!
-                .copyWith(color: Colors.blue[400]),
+                .copyWith(color: Colors.black45),
           ),
         ),
       ],

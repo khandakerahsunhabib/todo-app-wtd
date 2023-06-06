@@ -8,9 +8,9 @@ class AboutUs extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () async{ 
+      onWillPop: () async {
         return false;
-       },
+      },
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.blue,
