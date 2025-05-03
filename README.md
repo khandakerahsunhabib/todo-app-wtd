@@ -1,4 +1,4 @@
-# wtd
+![Image](https://github.com/user-attachments/assets/a94a87f1-d68d-4088-90cf-aa23aadce264)
 
 What to do (WTD) is a todo app to save your daily task
 
