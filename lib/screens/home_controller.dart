@@ -12,11 +12,22 @@ class HomeController extends GetxController {
   var foundToDo = <ToDo>[].obs;
   String currentRoute = "/";
 
+  String _formatDateTime(DateTime dt) {
+    final hours = dt.hour % 12 == 0 ? 12 : dt.hour % 12;
+    final amPm = dt.hour >= 12 ? 'PM' : 'AM';
+    final minuteStr = dt.minute.toString().padLeft(2, '0');
+    final hourStr = hours.toString().padLeft(2, '0');
+    final months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    final monthStr = months[dt.month - 1];
+    return '${dt.day} $monthStr ${dt.year}, $hourStr:$minuteStr $amPm';
+  }
+
   void addToDoItem() async {
     var box = await Hive.openBox<ToDo>('todoBox');
     box.add(ToDo(
       id: DateTime.now().microsecondsSinceEpoch.toString(),
       todoText: todoController.text,
+      createdAt: _formatDateTime(DateTime.now()),
     ));
     todoController.clear();
     getToDoItemList();
@@ -54,16 +65,14 @@ class HomeController extends GetxController {
     foundToDo.clear();
     var searchingValue = searchToDoItemController.text;
     if (searchingValue.isEmpty) {
-      for (var element in todoList) {
-        foundToDo.add(ToDo(id: element.id, todoText: element.todoText));
-      }
+      foundToDo.addAll(todoList);
     } else {
       for (var element in todoList) {
         if (element.todoText!
             .toLowerCase()
             .contains(searchingValue.toLowerCase())) {
-          foundToDo.add(ToDo(id: element.id, todoText: element.todoText));
-        } else {}
+          foundToDo.add(element);
+        }
       }
     }
   }

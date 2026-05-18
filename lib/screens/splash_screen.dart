@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:wtd/screens/home_controller.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+  const SplashScreen({super.key});
   @override
   State<SplashScreen> createState() => _SplashScreenState();
 }
@@ -42,7 +42,7 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 
-  _upperPart() {
+  Widget _upperPart() {
     return Column(
       children: [
         Center(
@@ -69,7 +69,7 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 
-  _lowerPart() {
+  Widget _lowerPart() {
     return Column(
       children: [
         const CircularProgressIndicator(

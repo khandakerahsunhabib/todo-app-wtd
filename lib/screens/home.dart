@@ -8,7 +8,7 @@ import '../screens/home_controller.dart';
 import '../constants/colors.dart';
 
 class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+  const Home({super.key});
   static const routeName = '/home';
 
   @override
@@ -17,7 +17,6 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final HomeController _controller = Get.put(HomeController());
-  bool _canPop = false;
   final appName = 'What To Do';
   final version = 'App Version: 1.0.0';
   ToDo? todo;
@@ -25,53 +24,47 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     _controller.loadToDoItemListData();
-    return WillPopScope(
-      onWillPop: () async {
-        if (_canPop) {
-          return true;
-        } else {
-          showDialog(
-              context: context,
-              builder: (context) => AlertDialog(
-                    title: const Icon(
-                      Icons.warning_rounded,
-                      size: 50,
-                      color: Colors.green,
-                    ),
-                    content: Text(
-                      'Are you sure want to exit?',
-                      style: Theme.of(context)
-                          .textTheme
-                          .labelLarge!
-                          .copyWith(color: Colors.blue, fontSize: 18),
-                    ),
-                    actions: [
-                      TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: Text('No',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelMedium!
-                                  .copyWith(color: Colors.red, fontSize: 16))),
-                      TextButton(
-                          onPressed: () {
-                            setState(() {
-                              _canPop = true;
-                            });
-                            exit(0);
-                          },
-                          child: Text('Yes',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelMedium!
-                                  .copyWith(
-                                      color: Colors.green, fontSize: 16))),
-                    ],
-                  ));
-        }
-        return false;
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  title: const Icon(
+                    Icons.warning_rounded,
+                    size: 50,
+                    color: Colors.green,
+                  ),
+                  content: Text(
+                    'Are you sure want to exit?',
+                    style: Theme.of(context)
+                        .textTheme
+                        .labelLarge!
+                        .copyWith(color: Colors.blue, fontSize: 18),
+                  ),
+                  actions: [
+                    TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text('No',
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelMedium!
+                                .copyWith(color: Colors.red, fontSize: 16))),
+                    TextButton(
+                        onPressed: () {
+                          exit(0);
+                        },
+                        child: Text('Yes',
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelMedium!
+                                .copyWith(
+                                    color: Colors.green, fontSize: 16))),
+                  ],
+                ));
       },
       child: Scaffold(
         backgroundColor: tdBGColor,
@@ -91,9 +84,9 @@ class _HomeState extends State<Home> {
                 const SizedBox(
                   height: 40,
                 ),
-                Obx(
-                  () => Container(
-                    child: controller.foundToDo.isEmpty
+                Expanded(
+                  child: Obx(
+                    () => controller.foundToDo.isEmpty
                         ? _emptyList()
                         : todoList(setState),
                   ),
@@ -105,9 +98,7 @@ class _HomeState extends State<Home> {
     );
   }
 
-  _emptyList() {
-    return Expanded(
-        child:
-            Center(child: Lottie.asset('assets/animations/no-data-new.json')));
+  Widget _emptyList() {
+    return Center(child: Lottie.asset('assets/animations/no-data-new.json'));
   }
 }

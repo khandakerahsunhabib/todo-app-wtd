@@ -17,7 +17,6 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
   final appName = "What To Do";
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(

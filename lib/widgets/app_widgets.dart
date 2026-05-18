@@ -90,9 +90,12 @@ Drawer myDrawer(String appName, String version, BuildContext context) {
             leading: Icons.share_sharp,
             title: 'Share App',
             ontap: () async {
-              await Share.share(
-                  'https://play.google.com/store/apps/details?id=com.codecraft.whattodo',
-                  subject: 'any subject if you have');
+              await SharePlus.instance.share(
+                ShareParams(
+                  text: 'https://play.google.com/store/apps/details?id=com.codecraft.whattodo',
+                  subject: 'any subject if you have',
+                ),
+              );
             }),
         const Divider(
           height: 1,
@@ -190,91 +193,191 @@ Widget headingAndTotalTaskCount(BuildContext context) {
   );
 }
 
+void _showEditDialog(BuildContext context, ToDo item, int actualIndex, HomeController controller) {
+  final editController = TextEditingController(text: item.todoText);
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text('Edit Task', style: TextStyle(color: Colors.blue)),
+      content: TextField(
+        controller: editController,
+        decoration: InputDecoration(
+          hintText: 'Enter task text',
+          enabledBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.blue.shade200),
+          ),
+          focusedBorder: const UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.blue),
+          ),
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Cancel', style: TextStyle(color: Colors.red)),
+        ),
+        TextButton(
+          onPressed: () {
+            if (editController.text.trim().isNotEmpty) {
+              controller.updateToDoItemByIndex(
+                actualIndex,
+                ToDo(
+                  id: item.id,
+                  todoText: editController.text.trim(),
+                  isDone: item.isDone,
+                  createdAt: item.createdAt,
+                ),
+              );
+              Navigator.pop(context);
+              toast('Task Updated', Colors.green, Colors.white);
+            } else {
+              toast('Task text cannot be empty', Colors.red, Colors.white);
+            }
+          },
+          child: const Text('Save', style: TextStyle(color: Colors.green)),
+        ),
+      ],
+    ),
+  );
+}
+
+void _showDeleteConfirmationDialog(BuildContext context, int actualIndex, HomeController controller) {
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Row(
+        children: [
+          Icon(Icons.warning_amber_rounded, color: Colors.red),
+          SizedBox(width: 10),
+          Text('Delete Task'),
+        ],
+      ),
+      content: const Text('Are you sure you want to delete this task?'),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('No', style: TextStyle(color: Colors.blue)),
+        ),
+        TextButton(
+          onPressed: () {
+            controller.deleteDataByIndex(actualIndex);
+            Navigator.pop(context);
+            toast('Task Deleted', Colors.red, Colors.white);
+          },
+          child: const Text('Yes', style: TextStyle(color: Colors.red)),
+        ),
+      ],
+    ),
+  );
+}
+
 Widget todoList(Function setState) {
   final HomeController controller = Get.put(HomeController());
-  return Expanded(
-      child: Obx(() => ListView.builder(
+  return ListView.builder(
             itemCount: controller.foundToDo.length,
-            itemBuilder: (context, index) => Container(
-              margin: const EdgeInsets.only(bottom: 8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ListTile(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25),
-                    ),
-                    onTap: () {
-                      setState(() {
-                        if (controller.todoList[index].isDone == false) {
-                          controller.todoList[index].isDone = true;
-                          controller.updateToDoItemByIndex(
-                              index,
-                              ToDo(
-                                  id: controller.todoList[index].id,
-                                  todoText: controller.todoList[index].todoText,
-                                  isDone: controller.enableDisable(
-                                      controller.todoList[index].isDone)));
-                          //print('Updated');
-                        } else {
-                          controller.todoList[index].isDone = false;
-                          controller.updateToDoItemByIndex(
-                              index,
-                              ToDo(
-                                  id: controller.todoList[index].id,
-                                  todoText: controller.todoList[index].todoText,
-                                  isDone: controller.enableDisable(
-                                      controller.todoList[index].isDone)));
-                        }
-                      });
-                    },
-                    contentPadding:
-                        const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                    tileColor: Colors.white30,
-                    leading: controller.todoList[index].isDone!
-                        ? const Icon(
-                            Icons.check_box,
-                            color: Colors.blue,
-                          )
-                        : const Icon(
-                            Icons.check_box_outline_blank,
-                            color: Colors.blue,
-                          ),
-                    trailing: Container(
-                      padding: const EdgeInsets.all(0),
-                      margin: const EdgeInsets.symmetric(
-                        vertical: 10,
+            itemBuilder: (context, index) {
+              final ToDo item = controller.foundToDo[index];
+              final actualIndex = controller.todoList.indexWhere((element) => element.id == item.id);
+              if (actualIndex == -1) return const SizedBox.shrink();
+
+              return Container(
+                margin: const EdgeInsets.only(bottom: 8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ListTile(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25),
                       ),
-                      width: 38,
-                      height: 40,
-                      decoration: BoxDecoration(
-                          color: Colors.red.shade300,
-                          borderRadius: BorderRadius.circular(5)),
-                      child: IconButton(
-                        onPressed: () {
-                          controller.deleteDataByIndex(index);
-                          toast('Task Deleted', Colors.red, Colors.white);
-                        },
+                      onTap: () {
+                        setState(() {
+                          if (item.isDone == false || item.isDone == null) {
+                            item.isDone = true;
+                            controller.updateToDoItemByIndex(
+                                actualIndex,
+                                ToDo(
+                                    id: item.id,
+                                    todoText: item.todoText,
+                                    isDone: true,
+                                    createdAt: item.createdAt));
+                          } else {
+                            item.isDone = false;
+                            controller.updateToDoItemByIndex(
+                                actualIndex,
+                                ToDo(
+                                    id: item.id,
+                                    todoText: item.todoText,
+                                    isDone: false,
+                                    createdAt: item.createdAt));
+                          }
+                        });
+                      },
+                      contentPadding:
+                          const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                      tileColor: Colors.white30,
+                      leading: item.isDone == true
+                          ? const Icon(
+                              Icons.check_box,
+                              color: Colors.blue,
+                            )
+                          : const Icon(
+                              Icons.check_box_outline_blank,
+                              color: Colors.blue,
+                            ),
+                      trailing: PopupMenuButton<String>(
                         icon: const Icon(
-                          Icons.delete,
-                          color: Colors.white,
-                          size: 19,
+                          Icons.more_vert,
+                          color: Colors.blue,
                         ),
+                        onSelected: (value) {
+                          if (value == 'edit') {
+                            _showEditDialog(context, item, actualIndex, controller);
+                          } else if (value == 'delete') {
+                            _showDeleteConfirmationDialog(context, actualIndex, controller);
+                          }
+                        },
+                        itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                          const PopupMenuItem<String>(
+                            value: 'edit',
+                            child: ListTile(
+                              contentPadding: EdgeInsets.zero,
+                              leading: Icon(Icons.edit, color: Colors.blue),
+                              title: Text('Edit'),
+                            ),
+                          ),
+                          const PopupMenuItem<String>(
+                            value: 'delete',
+                            child: ListTile(
+                              contentPadding: EdgeInsets.zero,
+                              leading: Icon(Icons.delete, color: Colors.red),
+                              title: Text('Delete'),
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                    title: Text(
-                      controller.foundToDo[index].todoText.toString(),
-                      style: TextStyle(
-                          fontSize: 17,
-                          decoration: controller.todoList[index].isDone!
-                              ? TextDecoration.lineThrough
-                              : null),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          )));
+                      title: Text(
+                        item.todoText.toString(),
+                        style: TextStyle(
+                            fontSize: 17,
+                            decoration: item.isDone == true
+                                ? TextDecoration.lineThrough
+                                : null),
+                      ),
+                      subtitle: item.createdAt != null
+                          ? Text(
+                              item.createdAt!,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey.shade600,
+                              ),
+                            )
+                          : null,
+                    )
+                  ],
+                ),
+              );
+            },
+          );
 }
 
 AppBar appBar() {
@@ -296,7 +399,7 @@ AppBar appBar() {
   );
 }
 
-toast(String msg, Color color, Color txtColor) {
+void toast(String msg, Color color, Color txtColor) {
   Fluttertoast.showToast(
     msg: msg,
     toastLength: Toast.LENGTH_SHORT,
@@ -345,6 +448,7 @@ Widget addTaskField(HomeController controller) {
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.white,
+                backgroundColor: Colors.blue,
                 minimumSize: const Size(60, 60),
                 elevation: 10),
             onPressed: () {

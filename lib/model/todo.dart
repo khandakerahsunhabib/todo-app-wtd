@@ -3,7 +3,7 @@ part 'todo.g.dart';
 
 @HiveType(typeId: 1)
 class ToDo {
-  ToDo({required this.id, required this.todoText, this.isDone = false});
+  ToDo({required this.id, required this.todoText, this.isDone = false, this.createdAt});
 
   @HiveField(0)
   String? id;
@@ -13,4 +13,7 @@ class ToDo {
 
   @HiveField(2)
   bool? isDone;
+
+  @HiveField(3)
+  String? createdAt;
 }
