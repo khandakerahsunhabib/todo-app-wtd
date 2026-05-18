@@ -450,6 +450,9 @@ Widget addTaskField(HomeController controller) {
                 foregroundColor: Colors.white,
                 backgroundColor: Colors.blue,
                 minimumSize: const Size(60, 60),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
                 elevation: 10),
             onPressed: () {
               if (controller.todoController.text.isEmpty) {
