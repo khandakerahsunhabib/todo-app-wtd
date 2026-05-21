@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:wtd/constants/colors.dart';
 import 'package:wtd/model/todo.dart';
@@ -11,8 +12,9 @@ import 'package:wtd/widgets/drawer_tile.dart';
 final HomeController controller = Get.put(HomeController());
 
 Drawer myDrawer(String appName, String version, BuildContext context) {
+  final isDark = Theme.of(context).brightness == Brightness.dark;
   return Drawer(
-    backgroundColor: drawerBgColor,
+    backgroundColor: isDark ? const Color(0xFF1E1E1E) : drawerBgColor,
     child: ListView(
       children: [
         DrawerHeader(
@@ -20,7 +22,9 @@ Drawer myDrawer(String appName, String version, BuildContext context) {
               gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.topRight,
-                  colors: [Colors.blue.shade200, Colors.grey.shade300])),
+                  colors: isDark 
+                      ? [Colors.blue.shade900, Colors.grey.shade900]
+                      : [Colors.blue.shade200, Colors.grey.shade300])),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -36,13 +40,18 @@ Drawer myDrawer(String appName, String version, BuildContext context) {
               ),
               Text(
                 appName,
-                style: Theme.of(context).textTheme.titleMedium,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: isDark ? Colors.white : Colors.black87,
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 5),
                 child: Text(
                   version,
-                  style: Theme.of(context).textTheme.labelMedium,
+                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                        color: isDark ? Colors.white70 : Colors.grey.shade700,
+                      ),
                 ),
               )
             ],
@@ -291,7 +300,7 @@ Widget todoList(Function setState) {
                       ),
                       onTap: () {
                         setState(() {
-                          if (item.isDone == false || item.isDone == null) {
+                          if (!item.isDone) {
                             item.isDone = true;
                             controller.updateToDoItemByIndex(
                                 actualIndex,
@@ -363,15 +372,13 @@ Widget todoList(Function setState) {
                                 ? TextDecoration.lineThrough
                                 : null),
                       ),
-                      subtitle: item.createdAt != null
-                          ? Text(
-                              item.createdAt!,
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey.shade600,
-                              ),
-                            )
-                          : null,
+                      subtitle: Text(
+                        DateFormat('MMM dd, yyyy - hh:mm a').format(item.createdAt),
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey.shade600,
+                        ),
+                      ),
                     )
                   ],
                 ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
-import 'package:url_launcher/url_launcher_string.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../model/todo.dart';
 import 'home.dart';
 
@@ -12,22 +12,14 @@ class HomeController extends GetxController {
   var foundToDo = <ToDo>[].obs;
   String currentRoute = "/";
 
-  String _formatDateTime(DateTime dt) {
-    final hours = dt.hour % 12 == 0 ? 12 : dt.hour % 12;
-    final amPm = dt.hour >= 12 ? 'PM' : 'AM';
-    final minuteStr = dt.minute.toString().padLeft(2, '0');
-    final hourStr = hours.toString().padLeft(2, '0');
-    final months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    final monthStr = months[dt.month - 1];
-    return '${dt.day} $monthStr ${dt.year}, $hourStr:$minuteStr $amPm';
-  }
+
 
   void addToDoItem() async {
     var box = await Hive.openBox<ToDo>('todoBox');
     box.add(ToDo(
       id: DateTime.now().microsecondsSinceEpoch.toString(),
       todoText: todoController.text,
-      createdAt: _formatDateTime(DateTime.now()),
+      createdAt: DateTime.now(),
     ));
     todoController.clear();
     getToDoItemList();
@@ -93,12 +85,18 @@ class HomeController extends GetxController {
   }
 
   void rateApp() async {
-    const url =
-        'https://play.google.com/store/apps/details?id=com.codecraft.whattodo';
-    if (await canLaunchUrlString(url)) {
-      await launchUrlString(url);
-    } else {
-      throw 'Could not launch $url';
+    final Uri uri = Uri.parse(
+        'https://play.google.com/store/apps/details?id=com.codecraft.whattodo');
+    try {
+      final success = await launchUrl(
+        uri,
+        mode: LaunchMode.externalApplication,
+      );
+      if (!success) {
+        debugPrint('Could not launch $uri');
+      }
+    } catch (e) {
+      debugPrint('Error launching rating page: $e');
     }
   }
 }

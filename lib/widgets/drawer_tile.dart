@@ -14,6 +14,7 @@ class DrawerTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return ListTile(
       leading: Icon(
         leading,
@@ -22,11 +23,14 @@ class DrawerTile extends StatelessWidget {
       style: ListTileStyle.drawer,
       title: Text(
         title!,
-        style: Theme.of(context).textTheme.titleSmall!.copyWith(fontSize: 14),
+        style: Theme.of(context).textTheme.titleSmall!.copyWith(
+              fontSize: 14,
+              color: isDark ? Colors.white : Colors.black87,
+            ),
       ),
       onTap: ontap,
       horizontalTitleGap: 0,
-      iconColor: Colors.blue,
+      iconColor: isDark ? Colors.blue.shade300 : Colors.blue,
       minLeadingWidth: 50,
     );
   }

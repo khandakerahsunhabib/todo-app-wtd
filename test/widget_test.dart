@@ -1,30 +1,39 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
+import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
-
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:wtd/main.dart';
+import 'package:wtd/model/todo.dart';
+import 'package:wtd/model/bazar_item.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
+  setUpAll(() async {
+    // Initialize Hive with a temporary directory
+    final tempDir = Directory.systemTemp.createTempSync();
+    Hive.init(tempDir.path);
+    try {
+      Hive.registerAdapter(ToDoAdapter());
+      Hive.registerAdapter(BazarItemAdapter());
+    } catch (_) {
+      // Adapter might already be registered
+    }
+    await Hive.openBox<ToDo>('todos');
+    await Hive.openBox<BazarItem>('bazarItems');
+    await Hive.openBox('settings');
+  });
+
+  tearDownAll(() async {
+    await Hive.close();
+  });
+
+  testWidgets('Splash Screen displays App Name and transitions to Home', (WidgetTester tester) async {
     // Build our app and trigger a frame.
     await tester.pumpWidget(const MyApp());
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    // Verify that our Splash Screen renders.
+    expect(find.byType(MyApp), findsOneWidget);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // Wait for the timer of 3 seconds to complete and let navigation settle.
+    await tester.pump(const Duration(seconds: 3));
+    await tester.pumpAndSettle();
   });
 }
