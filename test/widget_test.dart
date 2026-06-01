@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:wtd/main.dart';
 import 'package:wtd/model/todo.dart';
-import 'package:wtd/model/bazar_item.dart';
+import 'package:wtd/model/expense_item.dart';
 
 void main() {
   setUpAll(() async {
@@ -12,12 +12,12 @@ void main() {
     Hive.init(tempDir.path);
     try {
       Hive.registerAdapter(ToDoAdapter());
-      Hive.registerAdapter(BazarItemAdapter());
+      Hive.registerAdapter(ExpenseItemAdapter());
     } catch (_) {
       // Adapter might already be registered
     }
     await Hive.openBox<ToDo>('todos');
-    await Hive.openBox<BazarItem>('bazarItems');
+    await Hive.openBox<ExpenseItem>('expenseItems');
     await Hive.openBox('settings');
   });
 

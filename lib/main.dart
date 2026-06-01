@@ -8,16 +8,16 @@ import 'package:wtd/screens/privacy_policy.dart';
 import 'package:wtd/screens/splash_screen.dart';
 import 'package:wtd/screens/add_todo_screen.dart';
 import 'package:wtd/screens/edit_todo_screen.dart';
-import 'package:wtd/screens/add_bazar_screen.dart';
-import 'package:wtd/screens/edit_bazar_screen.dart';
+import 'package:wtd/screens/add_expense_screen.dart';
+import 'package:wtd/screens/edit_expense_screen.dart';
 import 'model/todo.dart';
-import 'model/bazar_item.dart';
+import 'model/expense_item.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   Hive.registerAdapter(ToDoAdapter());
-  Hive.registerAdapter(BazarItemAdapter());
+  Hive.registerAdapter(ExpenseItemAdapter());
   await Hive.openBox('settings');
   runApp(const MyApp());
 }
@@ -77,8 +77,8 @@ class MyApp extends StatelessWidget {
         GetPage(name: '/privacy_policy', page: () => const PrivacyPolicy()),
         GetPage(name: '/add_todo', page: () => const AddTodoScreen()),
         GetPage(name: '/edit_todo', page: () => const EditTodoScreen()),
-        GetPage(name: '/add_bazar', page: () => const AddBazarScreen()),
-        GetPage(name: '/edit_bazar', page: () => const EditBazarScreen()),
+        GetPage(name: '/add_expense_item', page: () => const AddExpenseScreen()),
+        GetPage(name: '/edit_expense_item', page: () => const EditExpenseScreen()),
       ],
     );
   }

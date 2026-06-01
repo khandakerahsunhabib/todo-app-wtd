@@ -4,7 +4,8 @@ import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:wtd/model/todo.dart';
-import 'package:wtd/screens/bazar_controller.dart';
+import 'package:wtd/model/expense_item.dart';
+import 'package:wtd/screens/expense_controller.dart';
 import 'package:wtd/widgets/app_widgets.dart';
 
 // Controller for managing ToDo tasks
@@ -70,7 +71,7 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ToDoController todoController = Get.put(ToDoController());
-    final BazarController bazarController = Get.put(BazarController());
+    final ExpenseController expenseController = Get.put(ExpenseController());
 
     return PopScope(
       canPop: false,
@@ -108,7 +109,7 @@ class Home extends StatelessWidget {
                       text: 'ToDo (${todoController.todoList.length})',
                     )),
                 Obx(() => Tab(
-                      text: 'Daily Bazar (${bazarController.bazarList.length})',
+                      text: 'Expense Tracker (${expenseController.expenseList.length})',
                     )),
               ],
             ),
@@ -117,17 +118,8 @@ class Home extends StatelessWidget {
           body: TabBarView(
             children: [
               Obx(() => _buildToDoTab(context, todoController)),
-              Obx(() => _buildBazarTab(context, bazarController)),
+              Obx(() => _buildExpenseTrackerTab(context, expenseController)),
             ],
-          ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () => _showAddSelectionDialog(context),
-            backgroundColor: Theme.of(context).brightness == Brightness.dark
-                ? Colors.blue.shade900
-                : Colors.blue,
-            foregroundColor: Colors.white,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-            child: const Icon(Icons.add, size: 28),
           ),
         ),
       ),
@@ -233,92 +225,497 @@ class Home extends StatelessWidget {
     );
   }
 
-  void _showAddSelectionDialog(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          backgroundColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(24),
-          ),
-          elevation: 10,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 28),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'Choose Item Type',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: isDark ? Colors.white : Colors.black87,
+  Widget _buildToDoTab(BuildContext context, ToDoController todoController) {
+    return Column(
+      children: [
+        Expanded(
+          child: todoController.todoList.isEmpty
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.assignment_turned_in_outlined, size: 80, color: Colors.grey.shade400),
+                      const SizedBox(height: 16),
+                      Text(
+                        'No tasks yet! Click the button below to add one.',
+                        style: TextStyle(fontSize: 16, color: Colors.grey.shade600, fontWeight: FontWeight.w500),
                       ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Select the type of item you want to create.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: isDark ? Colors.white60 : Colors.grey.shade500, fontSize: 14),
-                ),
-                const SizedBox(height: 24),
-                ListTile(
-                  leading: CircleAvatar(
-                    backgroundColor: isDark ? Colors.blue.withAlpha(50) : Colors.blue.shade50,
-                    child: Icon(Icons.assignment_rounded, color: isDark ? Colors.blue.shade300 : Colors.blue),
+                    ],
                   ),
-                  title: Text(
-                    'Add Todo',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: isDark ? Colors.white : Colors.black87),
-                  ),
-                  subtitle: Text(
-                    'Add tasks or notes to your todo list.',
-                    style: TextStyle(color: isDark ? Colors.white60 : Colors.grey.shade600, fontSize: 13),
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                    side: BorderSide(color: isDark ? Colors.white12 : Colors.grey.shade200),
-                  ),
-                  onTap: () {
-                    Get.back();
-                    Get.toNamed('/add_todo');
+                )
+              : ListView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+                  itemCount: todoController.todoList.length,
+                  itemBuilder: (context, index) {
+                    final todo = todoController.todoList[index];
+                    return Card(
+                      margin: const EdgeInsets.symmetric(vertical: 6.0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      elevation: 0.5,
+                      color: Theme.of(context).cardColor,
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(16),
+                        onTap: () => todoController.handleToDoChange(todo),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              GestureDetector(
+                                onTap: () => todoController.handleToDoChange(todo),
+                                child: AnimatedContainer(
+                                  duration: const Duration(milliseconds: 200),
+                                  width: 24,
+                                  height: 24,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: todo.isDone ? Colors.blue : Colors.transparent,
+                                    border: Border.all(
+                                      color: todo.isDone ? Colors.blue : Colors.grey.shade400,
+                                      width: 2,
+                                    ),
+                                  ),
+                                  child: todo.isDone
+                                      ? const Icon(
+                                          Icons.check,
+                                          size: 16,
+                                          color: Colors.white,
+                                        )
+                                      : null,
+                                ),
+                              ),
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      todo.todoText ?? 'No Title',
+                                      style: TextStyle(
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.w600,
+                                        decoration: todo.isDone
+                                            ? TextDecoration.lineThrough
+                                            : TextDecoration.none,
+                                        color: todo.isDone
+                                            ? Colors.grey
+                                            : (Theme.of(context).brightness == Brightness.dark
+                                                ? Colors.white
+                                                : Colors.black87),
+                                      ),
+                                    ),
+                                    if (todo.description != null && todo.description!.isNotEmpty) ...[
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        todo.description!,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: todo.isDone
+                                              ? Colors.grey
+                                              : (Theme.of(context).brightness == Brightness.dark
+                                                  ? Colors.white70
+                                                  : Colors.black54),
+                                          decoration: todo.isDone
+                                              ? TextDecoration.lineThrough
+                                              : TextDecoration.none,
+                                        ),
+                                      ),
+                                    ],
+                                    const SizedBox(height: 6),
+                                    Text(
+                                      DateFormat('MMM dd, yyyy - hh:mm a').format(todo.createdAt),
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w500,
+                                        color: todo.isDone
+                                            ? Colors.grey.shade400
+                                            : (Theme.of(context).brightness == Brightness.dark
+                                                ? Colors.white38
+                                                : Colors.black38),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              PopupMenuButton<String>(
+                                icon: Icon(
+                                  Icons.more_vert_rounded,
+                                  color: Theme.of(context).brightness == Brightness.dark
+                                      ? Colors.white60
+                                      : Colors.grey.shade600,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                onSelected: (String value) {
+                                  if (value == 'edit') {
+                                    Get.toNamed('/edit_todo', arguments: todo);
+                                  } else if (value == 'delete') {
+                                    _showDeleteConfirmationDialog(context, todoController, todo.id ?? '');
+                                  }
+                                },
+                                itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                                  const PopupMenuItem<String>(
+                                    value: 'edit',
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.edit_outlined, color: Colors.blue, size: 20),
+                                        SizedBox(width: 10),
+                                        Text('Edit', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                                      ],
+                                    ),
+                                  ),
+                                  const PopupMenuItem<String>(
+                                    value: 'delete',
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.delete_outline_rounded, color: Colors.red, size: 20),
+                                        SizedBox(width: 10),
+                                        Text('Delete', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.red)),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
                   },
                 ),
-                const SizedBox(height: 16),
-                ListTile(
-                  leading: CircleAvatar(
-                    backgroundColor: isDark ? Colors.orange.withAlpha(50) : Colors.orange.shade50,
-                    child: Icon(Icons.shopping_bag_rounded, color: isDark ? Colors.orange.shade300 : Colors.orange),
-                  ),
-                  title: Text(
-                    'Daily Bazar',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: isDark ? Colors.white : Colors.black87),
-                  ),
-                  subtitle: Text(
-                    'Track items, estimated prices, and purchase costs.',
-                    style: TextStyle(color: isDark ? Colors.white60 : Colors.grey.shade600, fontSize: 13),
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                    side: BorderSide(color: isDark ? Colors.white12 : Colors.grey.shade200),
-                  ),
-                  onTap: () {
-                    Get.back();
-                    Get.toNamed('/add_bazar');
-                  },
+        ),
+        // Fixed bottom button
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(16.0),
+          color: Theme.of(context).scaffoldBackgroundColor,
+          child: ElevatedButton.icon(
+            onPressed: () => Get.toNamed('/add_todo'),
+            icon: const Icon(Icons.add, color: Colors.white),
+            label: const Text('Add Todo Task', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).brightness == Brightness.dark ? Colors.blue.shade900 : Colors.blue,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              elevation: 2,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildExpenseTrackerTab(BuildContext context, ExpenseController expenseController) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    final incomeList = expenseController.expenseList.where((e) => e.isIncome).toList();
+    final expenseList = expenseController.expenseList.where((e) => !e.isIncome).toList();
+
+    return DefaultTabController(
+      length: 2,
+      child: Column(
+        children: [
+          // Summary Header Card
+          Container(
+            margin: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Theme.of(context).cardColor,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: isDark ? Colors.black38 : const Color.fromRGBO(0, 0, 0, 0.02),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
                 ),
-                const SizedBox(height: 24),
-                TextButton(
-                  onPressed: () => Get.back(),
-                  child: Text(
-                    'Cancel',
-                    style: TextStyle(
-                      color: isDark ? Colors.white70 : Colors.grey.shade600,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
+              ],
+            ),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Net Balance',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: isDark ? Colors.white70 : Colors.grey.shade600,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
+                    Text(
+                      '৳${expenseController.netBalance.toStringAsFixed(2)}',
+                      style: TextStyle(
+                        fontSize: 22,
+                        color: expenseController.netBalance >= 0 ? Colors.green : Colors.red,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 12.0),
+                  child: Divider(height: 1),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Column(
+                      children: [
+                        Row(
+                          children: [
+                            const Icon(Icons.arrow_downward, color: Colors.green, size: 16),
+                            const SizedBox(width: 4),
+                            Text(
+                              'Total Income',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: isDark ? Colors.white60 : Colors.grey.shade600,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          '৳${expenseController.totalIncome.toStringAsFixed(2)}',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.green,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Container(
+                      height: 30,
+                      width: 1,
+                      color: Theme.of(context).dividerColor,
+                    ),
+                    Column(
+                      children: [
+                        Row(
+                          children: [
+                            const Icon(Icons.arrow_upward, color: Colors.red, size: 16),
+                            const SizedBox(width: 4),
+                            Text(
+                              'Total Expense',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: isDark ? Colors.white60 : Colors.grey.shade600,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          '৳${expenseController.totalExpense.toStringAsFixed(2)}',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.red,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          // Sub-Tab Bar
+          TabBar(
+            indicatorColor: isDark ? Colors.blue.shade300 : Colors.blue,
+            labelColor: isDark ? Colors.white : Colors.black87,
+            unselectedLabelColor: Colors.grey,
+            labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+            tabs: [
+              Tab(text: 'Income (${incomeList.length})'),
+              Tab(text: 'Expense (${expenseList.length})'),
+            ],
+          ),
+          // TabBarView showing Income / Expense lists
+          Expanded(
+            child: TabBarView(
+              children: [
+                _buildTransactionList(context, expenseController, incomeList, true),
+                _buildTransactionList(context, expenseController, expenseList, false),
+              ],
+            ),
+          ),
+          // Fixed Bottom Button
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(16.0),
+            color: Theme.of(context).scaffoldBackgroundColor,
+            child: ElevatedButton.icon(
+              onPressed: () => _showAddTransactionBottomSheet(context),
+              icon: const Icon(Icons.add, color: Colors.white),
+              label: const Text(
+                'Add Transaction',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: isDark ? Colors.blue.shade900 : Colors.blue,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                elevation: 2,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTransactionList(
+    BuildContext context,
+    ExpenseController controller,
+    List<ExpenseItem> items,
+    bool isIncome,
+  ) {
+    if (items.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              isIncome ? Icons.account_balance_wallet_outlined : Icons.shopping_bag_outlined,
+              size: 70,
+              color: Colors.grey.shade400,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              isIncome ? 'No income recorded yet!' : 'No expenses recorded yet!',
+              style: TextStyle(fontSize: 15, color: Colors.grey.shade600, fontWeight: FontWeight.w500),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return ListView.builder(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      itemCount: items.length,
+      itemBuilder: (context, index) {
+        final item = items[index];
+        final isDark = Theme.of(context).brightness == Brightness.dark;
+
+        return Card(
+          margin: const EdgeInsets.symmetric(vertical: 6.0),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          elevation: 0.5,
+          color: Theme.of(context).cardColor,
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              children: [
+                CircleAvatar(
+                  backgroundColor: isIncome
+                      ? (isDark ? Colors.green.withAlpha(38) : Colors.green.shade50)
+                      : (isDark ? Colors.red.withAlpha(38) : Colors.red.shade50),
+                  child: Icon(
+                    isIncome ? Icons.arrow_downward : Icons.arrow_upward,
+                    color: isIncome ? Colors.green : Colors.red,
                   ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        item.title,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: isDark ? Colors.white : Colors.black87,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: isDark ? Colors.white10 : Colors.grey.shade200,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              item.category,
+                              style: TextStyle(
+                                fontSize: 11,
+                                color: isDark ? Colors.white70 : Colors.grey.shade700,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Text(
+                            DateFormat('MMM dd, yyyy').format(item.createdAt),
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: isDark ? Colors.white38 : Colors.black38,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                Text(
+                  '${isIncome ? "+" : "-"} ৳${item.amount.toStringAsFixed(2)}',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: isIncome ? Colors.green : Colors.red,
+                  ),
+                ),
+                const SizedBox(width: 4),
+                PopupMenuButton<String>(
+                  icon: Icon(
+                    Icons.more_vert_rounded,
+                    color: isDark ? Colors.white60 : Colors.grey.shade600,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  onSelected: (String value) {
+                    if (value == 'edit') {
+                      Get.toNamed('/edit_expense_item', arguments: item);
+                    } else if (value == 'delete') {
+                      _showDeleteExpenseConfirmationDialog(context, controller, item.id ?? '');
+                    }
+                  },
+                  itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                    const PopupMenuItem<String>(
+                      value: 'edit',
+                      child: Row(
+                        children: [
+                          Icon(Icons.edit_outlined, color: Colors.blue, size: 20),
+                          SizedBox(width: 10),
+                          Text('Edit', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                        ],
+                      ),
+                    ),
+                    const PopupMenuItem<String>(
+                      value: 'delete',
+                      child: Row(
+                        children: [
+                          Icon(Icons.delete_outline_rounded, color: Colors.red, size: 20),
+                          SizedBox(width: 10),
+                          Text('Delete', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.red)),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -328,386 +725,89 @@ class Home extends StatelessWidget {
     );
   }
 
-  Widget _buildToDoTab(BuildContext context, ToDoController todoController) {
-    if (todoController.todoList.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.assignment_turned_in_outlined, size: 80, color: Colors.grey.shade400),
-            const SizedBox(height: 16),
-            Text(
-              'No tasks yet! Click the + button to add one.',
-              style: TextStyle(fontSize: 16, color: Colors.grey.shade600, fontWeight: FontWeight.w500),
-            ),
-          ],
-        ),
-      );
-    }
+  void _showAddTransactionBottomSheet(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return ListView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-      itemCount: todoController.todoList.length,
-      itemBuilder: (context, index) {
-        final todo = todoController.todoList[index];
-        return Card(
-          margin: const EdgeInsets.symmetric(vertical: 6.0),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          elevation: 0.5,
-          color: Theme.of(context).cardColor,
-          child: InkWell(
-            borderRadius: BorderRadius.circular(16),
-            onTap: () => todoController.handleToDoChange(todo),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  GestureDetector(
-                    onTap: () => todoController.handleToDoChange(todo),
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 200),
-                      width: 24,
-                      height: 24,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: todo.isDone ? Colors.blue : Colors.transparent,
-                        border: Border.all(
-                          color: todo.isDone ? Colors.blue : Colors.grey.shade400,
-                          width: 2,
-                        ),
-                      ),
-                      child: todo.isDone
-                          ? const Icon(
-                              Icons.check,
-                              size: 16,
-                              color: Colors.white,
-                            )
-                          : null,
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          todo.todoText ?? 'No Title',
-                          style: TextStyle(
-                            fontSize: 17,
-                            fontWeight: FontWeight.w600,
-                            decoration: todo.isDone
-                                ? TextDecoration.lineThrough
-                                : TextDecoration.none,
-                            color: todo.isDone
-                                ? Colors.grey
-                                : (Theme.of(context).brightness == Brightness.dark
-                                    ? Colors.white
-                                    : Colors.black87),
-                          ),
-                        ),
-                        if (todo.description != null && todo.description!.isNotEmpty) ...[
-                          const SizedBox(height: 4),
-                          Text(
-                            todo.description!,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: todo.isDone
-                                  ? Colors.grey
-                                  : (Theme.of(context).brightness == Brightness.dark
-                                      ? Colors.white70
-                                      : Colors.black54),
-                              decoration: todo.isDone
-                                  ? TextDecoration.lineThrough
-                                  : TextDecoration.none,
-                            ),
-                          ),
-                        ],
-                        const SizedBox(height: 6),
-                        Text(
-                          DateFormat('MMM dd, yyyy - hh:mm a').format(todo.createdAt),
-                          style: TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w500,
-                            color: todo.isDone
-                                ? Colors.grey.shade400
-                                : (Theme.of(context).brightness == Brightness.dark
-                                    ? Colors.white38
-                                    : Colors.black38),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  PopupMenuButton<String>(
-                    icon: Icon(
-                      Icons.more_vert_rounded,
-                      color: Theme.of(context).brightness == Brightness.dark
-                          ? Colors.white60
-                          : Colors.grey.shade600,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    onSelected: (String value) {
-                      if (value == 'edit') {
-                        Get.toNamed('/edit_todo', arguments: todo);
-                      } else if (value == 'delete') {
-                        _showDeleteConfirmationDialog(context, todoController, todo.id ?? '');
-                      }
-                    },
-                    itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                      const PopupMenuItem<String>(
-                        value: 'edit',
-                        child: Row(
-                          children: [
-                            Icon(Icons.edit_outlined, color: Colors.blue, size: 20),
-                            SizedBox(width: 10),
-                            Text('Edit', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
-                          ],
-                        ),
-                      ),
-                      const PopupMenuItem<String>(
-                        value: 'delete',
-                        child: Row(
-                          children: [
-                            Icon(Icons.delete_outline_rounded, color: Colors.red, size: 20),
-                            SizedBox(width: 10),
-                            Text('Delete', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.red)),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildBazarTab(BuildContext context, BazarController bazarController) {
-    if (bazarController.bazarList.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.shopping_bag_outlined, size: 80, color: Colors.grey.shade400),
-            const SizedBox(height: 16),
-            Text(
-              'No items yet! Click the + button to add one.',
-              style: TextStyle(fontSize: 16, color: Colors.grey.shade600, fontWeight: FontWeight.w500),
-            ),
-          ],
-        ),
-      );
-    }
-
-    final totalEst = bazarController.bazarList.fold<double>(0, (sum, item) => sum + item.estimatedPrice);
-    final totalPur = bazarController.bazarList.fold<double>(0, (sum, item) => sum + item.purchasePrice);
-
-    return Column(
-      children: [
-        // Summary Header Card
-        Container(
-          margin: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Theme.of(context).cardColor,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Theme.of(context).brightness == Brightness.dark
-                    ? Colors.black38
-                    : const Color.fromRGBO(0, 0, 0, 0.02),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      backgroundColor: Theme.of(context).cardColor,
+      builder: (context) => SafeArea(
+        child: Container(
+          padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Column(
-                children: [
-                  Text(
-                    'Total Est. Budget',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Theme.of(context).brightness == Brightness.dark
-                          ? Colors.white70
-                          : Colors.black54,
-                      fontWeight: FontWeight.w500,
-                    ),
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  margin: const EdgeInsets.only(bottom: 24),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade300,
+                    borderRadius: BorderRadius.circular(2),
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    '৳${totalEst.toStringAsFixed(2)}',
-                    style: const TextStyle(fontSize: 16, color: Colors.blue, fontWeight: FontWeight.bold),
-                  ),
-                ],
+                ),
               ),
-              Container(
-                height: 30,
-                width: 1,
-                color: Theme.of(context).dividerColor,
+              Text(
+                'Add Transaction',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: isDark ? Colors.white : Colors.black87,
+                ),
               ),
-              Column(
-                children: [
-                  Text(
-                    'Total Purchased',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Theme.of(context).brightness == Brightness.dark
-                          ? Colors.white70
-                          : Colors.black54,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    '৳${totalPur.toStringAsFixed(2)}',
-                    style: const TextStyle(fontSize: 16, color: Colors.green, fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        // Item List
-        Expanded(
-          child: ListView.builder(
-            padding: const EdgeInsets.fromLTRB(16, 4, 16, 12),
-            itemCount: bazarController.bazarList.length,
-            itemBuilder: (context, index) {
-              final item = bazarController.bazarList[index];
-              return Card(
-                margin: const EdgeInsets.symmetric(vertical: 6.0),
+              const SizedBox(height: 16),
+              ListTile(
+                leading: CircleAvatar(
+                  backgroundColor: isDark ? Colors.green.withAlpha(50) : Colors.green.shade50,
+                  child: Icon(Icons.arrow_downward, color: isDark ? Colors.green.shade300 : Colors.green),
+                ),
+                title: Text(
+                  'Add Income',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: isDark ? Colors.white : Colors.black87),
+                ),
+                subtitle: Text(
+                  'Record money received (salary, business, gifts, etc.).',
+                  style: TextStyle(color: isDark ? Colors.white60 : Colors.grey.shade600, fontSize: 13),
+                ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
-                elevation: 0.5,
-                color: Theme.of(context).cardColor,
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      CircleAvatar(
-                        backgroundColor: Theme.of(context).brightness == Brightness.dark
-                            ? Colors.orange.withAlpha(38)
-                            : Colors.orange.shade50,
-                        child: const Icon(Icons.shopping_cart_rounded, color: Colors.orange),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              item.itemName,
-                              style: TextStyle(
-                                fontSize: 17,
-                                fontWeight: FontWeight.w600,
-                                color: Theme.of(context).brightness == Brightness.dark
-                                    ? Colors.white
-                                    : Colors.black87,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Row(
-                              children: [
-                                Text(
-                                  'Est: ৳${item.estimatedPrice.toStringAsFixed(2)}',
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    color: Theme.of(context).brightness == Brightness.dark
-                                        ? Colors.white70
-                                        : Colors.grey.shade600,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                const SizedBox(width: 12),
-                                Text(
-                                  'Pur: ৳${item.purchasePrice.toStringAsFixed(2)}',
-                                  style: const TextStyle(
-                                    fontSize: 13,
-                                    color: Colors.green,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 6),
-                            Text(
-                              'Created: ${DateFormat('MMM dd, yyyy - hh:mm a').format(item.createdAt)}',
-                              style: TextStyle(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w500,
-                                color: Theme.of(context).brightness == Brightness.dark
-                                    ? Colors.white38
-                                    : Colors.black38,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      PopupMenuButton<String>(
-                        icon: Icon(
-                          Icons.more_vert_rounded,
-                          color: Theme.of(context).brightness == Brightness.dark
-                              ? Colors.white60
-                              : Colors.grey.shade600,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        onSelected: (String value) {
-                          if (value == 'edit') {
-                            Get.toNamed('/edit_bazar', arguments: item);
-                          } else if (value == 'delete') {
-                            _showDeleteBazarConfirmationDialog(context, bazarController, item.id ?? '');
-                          }
-                        },
-                        itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                          const PopupMenuItem<String>(
-                            value: 'edit',
-                            child: Row(
-                              children: [
-                                Icon(Icons.edit_outlined, color: Colors.blue, size: 20),
-                                SizedBox(width: 10),
-                                Text('Edit', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
-                              ],
-                            ),
-                          ),
-                          const PopupMenuItem<String>(
-                            value: 'delete',
-                            child: Row(
-                              children: [
-                                Icon(Icons.delete_outline_rounded, color: Colors.red, size: 20),
-                                SizedBox(width: 10),
-                                Text('Delete', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.red)),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                onTap: () {
+                  Get.back();
+                  Get.toNamed('/add_expense_item', arguments: true);
+                },
+              ),
+              const SizedBox(height: 12),
+              ListTile(
+                leading: CircleAvatar(
+                  backgroundColor: isDark ? Colors.red.withAlpha(50) : Colors.red.shade50,
+                  child: Icon(Icons.arrow_upward, color: isDark ? Colors.red.shade300 : Colors.red),
                 ),
-              );
-            },
+                title: Text(
+                  'Add Expense',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: isDark ? Colors.white : Colors.black87),
+                ),
+                subtitle: Text(
+                  'Record money spent (food, rent, bills, shopping, etc.).',
+                  style: TextStyle(color: isDark ? Colors.white60 : Colors.grey.shade600, fontSize: 13),
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                onTap: () {
+                  Get.back();
+                  Get.toNamed('/add_expense_item', arguments: false);
+                },
+              ),
+            ],
           ),
         ),
-      ],
+      ),
     );
   }
 
@@ -816,7 +916,7 @@ class Home extends StatelessWidget {
     );
   }
 
-  void _showDeleteBazarConfirmationDialog(BuildContext context, BazarController controller, String id) {
+  void _showDeleteExpenseConfirmationDialog(BuildContext context, ExpenseController controller, String id) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     showDialog(
       context: context,
@@ -839,7 +939,7 @@ class Home extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'Delete Bazar Item?',
+                  'Delete Transaction?',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: isDark ? Colors.white : Colors.black87,
@@ -848,7 +948,7 @@ class Home extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  'Are you sure you want to permanently delete this bazar item? This action cannot be undone.',
+                  'Are you sure you want to permanently delete this transaction? This action cannot be undone.',
                   textAlign: TextAlign.center,
                   style: TextStyle(color: isDark ? Colors.white70 : Colors.black54, fontSize: 14),
                 ),
@@ -881,11 +981,11 @@ class Home extends StatelessWidget {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
-                          controller.deleteBazarItem(id);
+                          controller.deleteExpenseItem(id);
                           Navigator.pop(context);
                           Get.snackbar(
                             'Deleted',
-                            'Bazar item deleted successfully!',
+                            'Transaction deleted successfully!',
                             snackPosition: SnackPosition.BOTTOM,
                             backgroundColor: Colors.red.shade400,
                             colorText: Colors.white,
