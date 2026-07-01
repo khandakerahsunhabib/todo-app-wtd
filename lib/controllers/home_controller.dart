@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../model/todo.dart';
-import 'home.dart';
+import '../screens/home.dart';
 
 class HomeController extends GetxController {
   final todoController = TextEditingController();
@@ -11,8 +11,6 @@ class HomeController extends GetxController {
   var todoList = <ToDo>[].obs;
   var foundToDo = <ToDo>[].obs;
   String currentRoute = "/";
-
-
 
   void addToDoItem() async {
     var box = await Hive.openBox<ToDo>('todoBox');
@@ -71,7 +69,6 @@ class HomeController extends GetxController {
 
   bool enableDisable(bool? isDone) {
     bool? status = isDone!;
-    //print('status: ${status}');
     return status;
   }
 

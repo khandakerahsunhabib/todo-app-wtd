@@ -11,8 +11,8 @@ class AboutUs extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     // Theme Colors
-    final primaryColor = isDark ? Colors.blue.shade300 : Colors.blue.shade700;
-    final cardBgColor = isDark ? const Color(0xFF1E1E1E) : Colors.white;
+    final primaryColor = Theme.of(context).colorScheme.primary;
+    final cardBgColor = Theme.of(context).cardColor;
     final textColor = isDark ? Colors.white70 : Colors.grey.shade800;
     final titleColor = isDark ? Colors.white : Colors.black87;
     final borderColor = isDark ? Colors.white12 : Colors.grey.shade200;
@@ -26,15 +26,12 @@ class AboutUs extends StatelessWidget {
       child: Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
-          backgroundColor: isDark ? null : Colors.blue,
           elevation: 0,
           title: const Text(
             'About Developer',
-            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
           ),
           centerTitle: true,
           automaticallyImplyLeading: true,
-          iconTheme: const IconThemeData(color: Colors.white),
         ),
         drawer: myDrawer('What To Do', 'App version: 1.0.0', context),
         body: SingleChildScrollView(
@@ -120,14 +117,10 @@ class AboutUs extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 16, vertical: 6),
                         decoration: BoxDecoration(
-                          color: isDark
-                              ? Colors.blue.withAlpha(40)
-                              : Colors.blue.shade50,
+                          color: primaryColor.withAlpha(30),
                           borderRadius: BorderRadius.circular(20),
                           border: Border.all(
-                            color: isDark
-                                ? Colors.blue.withAlpha(80)
-                                : Colors.blue.shade100,
+                            color: primaryColor.withAlpha(80),
                           ),
                         ),
                         child: Text(
@@ -166,7 +159,7 @@ class AboutUs extends StatelessWidget {
                   icon: Icons.email_outlined,
                   title: 'Email Address',
                   value: 'ahsun.csm@gmail.com',
-                  iconColor: Colors.blue,
+                  iconColor: Theme.of(context).colorScheme.secondary,
                   isDark: isDark,
                   cardBgColor: cardBgColor,
                   textColor: textColor,

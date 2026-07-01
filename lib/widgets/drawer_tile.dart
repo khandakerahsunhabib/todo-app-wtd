@@ -30,7 +30,7 @@ class DrawerTile extends StatelessWidget {
       ),
       onTap: ontap,
       horizontalTitleGap: 0,
-      iconColor: isDark ? Colors.blue.shade300 : Colors.blue,
+      iconColor: Theme.of(context).colorScheme.primary,
       minLeadingWidth: 50,
     );
   }

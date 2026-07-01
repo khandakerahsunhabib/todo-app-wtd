@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:wtd/model/expense_item.dart';
-import 'package:wtd/screens/expense_controller.dart';
+import 'package:wtd/controllers/expense_controller.dart';
 
 class EditExpenseScreen extends StatefulWidget {
   const EditExpenseScreen({super.key});
@@ -71,7 +71,7 @@ class _EditExpenseScreenState extends State<EditExpenseScreen> {
             colorScheme: isDark
                 ? ColorScheme.dark(
                     primary: _item.isIncome ? Colors.green : Colors.red,
-                    surface: const Color(0xFF1E1E1E),
+                    surface: Theme.of(context).cardColor,
                   )
                 : ColorScheme.light(
                     primary: _item.isIncome ? Colors.green : Colors.red,

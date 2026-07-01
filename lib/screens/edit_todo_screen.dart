@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wtd/model/todo.dart';
-import 'package:wtd/screens/home.dart'; // to get ToDoController
+import 'package:wtd/controllers/todo_controller.dart';
 
 class EditTodoScreen extends StatefulWidget {
   const EditTodoScreen({super.key});
@@ -38,11 +38,9 @@ class _EditTodoScreenState extends State<EditTodoScreen> {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text('Edit ToDo', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
-        backgroundColor: isDark ? null : Colors.blue,
+        title: const Text('Edit ToDo'),
         elevation: 0,
         centerTitle: true,
-        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -74,7 +72,7 @@ class _EditTodoScreenState extends State<EditTodoScreen> {
                     labelStyle: TextStyle(color: isDark ? Colors.white70 : Colors.grey.shade700),
                     hintText: 'What needs to be done?',
                     hintStyle: TextStyle(color: isDark ? Colors.white30 : Colors.grey.shade400),
-                    prefixIcon: const Icon(Icons.title_rounded, color: Colors.blue),
+                    prefixIcon: Icon(Icons.title_rounded, color: Theme.of(context).colorScheme.primary),
                     filled: true,
                     fillColor: Theme.of(context).cardColor,
                     border: OutlineInputBorder(
@@ -87,7 +85,7 @@ class _EditTodoScreenState extends State<EditTodoScreen> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(16),
-                      borderSide: const BorderSide(color: Colors.blue, width: 2),
+                      borderSide: BorderSide(color: Theme.of(context).colorScheme.primary, width: 2),
                     ),
                   ),
                   validator: (value) {
@@ -107,9 +105,9 @@ class _EditTodoScreenState extends State<EditTodoScreen> {
                     labelStyle: TextStyle(color: isDark ? Colors.white70 : Colors.grey.shade700),
                     hintText: 'Add more details about the task...',
                     hintStyle: TextStyle(color: isDark ? Colors.white30 : Colors.grey.shade400),
-                    prefixIcon: const Padding(
-                      padding: EdgeInsets.only(bottom: 80.0),
-                      child: Icon(Icons.description_rounded, color: Colors.blue),
+                    prefixIcon: Padding(
+                      padding: const EdgeInsets.only(bottom: 80.0),
+                      child: Icon(Icons.description_rounded, color: Theme.of(context).colorScheme.primary),
                     ),
                     filled: true,
                     fillColor: Theme.of(context).cardColor,
@@ -123,7 +121,7 @@ class _EditTodoScreenState extends State<EditTodoScreen> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(16),
-                      borderSide: const BorderSide(color: Colors.blue, width: 2),
+                      borderSide: BorderSide(color: Theme.of(context).colorScheme.primary, width: 2),
                     ),
                   ),
                 ),
@@ -178,7 +176,7 @@ class _EditTodoScreenState extends State<EditTodoScreen> {
                           }
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue,
+                          backgroundColor: Theme.of(context).colorScheme.primary,
                           foregroundColor: Colors.white,
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           shape: RoundedRectangleBorder(

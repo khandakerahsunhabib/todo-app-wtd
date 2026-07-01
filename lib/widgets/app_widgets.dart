@@ -6,25 +6,31 @@ import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:wtd/constants/colors.dart';
 import 'package:wtd/model/todo.dart';
-import 'package:wtd/screens/home_controller.dart';
+import 'package:wtd/controllers/home_controller.dart';
 import 'package:wtd/widgets/drawer_tile.dart';
 
 final HomeController controller = Get.put(HomeController());
 
 Drawer myDrawer(String appName, String version, BuildContext context) {
-  final isDark = Theme.of(context).brightness == Brightness.dark;
   return Drawer(
-    backgroundColor: isDark ? const Color(0xFF1E1E1E) : drawerBgColor,
+    backgroundColor: Theme.of(context).cardColor,
     child: ListView(
+      padding: EdgeInsets.zero,
       children: [
         DrawerHeader(
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.topRight,
-                  colors: isDark 
-                      ? [Colors.blue.shade900, Colors.grey.shade900]
-                      : [Colors.blue.shade200, Colors.grey.shade300])),
+          margin: EdgeInsets.zero,
+          padding: EdgeInsets.zero,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color(0xFF0F2027),
+                Color(0xFF203A43),
+                Color(0xFF2C5364),
+              ],
+            ),
+          ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -33,32 +39,36 @@ Drawer myDrawer(String appName, String version, BuildContext context) {
                 width: 80,
                 height: 75,
                 decoration: const BoxDecoration(
-                    //color: Colors.blue,
                     image: DecorationImage(
                         fit: BoxFit.contain,
                         image: AssetImage('assets/images/wtd-logo.png'))),
               ),
+              const SizedBox(height: 10),
               Text(
                 appName,
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: isDark ? Colors.white : Colors.black87,
-                      fontWeight: FontWeight.bold,
-                    ),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                  letterSpacing: 1.0,
+                ),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 5),
+                padding: const EdgeInsets.only(top: 4),
                 child: Text(
                   version,
-                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                        color: isDark ? Colors.white70 : Colors.grey.shade700,
-                      ),
+                  style: TextStyle(
+                    color: Colors.white.withAlpha(150),
+                    fontSize: 12,
+                    letterSpacing: 0.5,
+                  ),
                 ),
               )
             ],
           ),
         ),
         DrawerTile(
-          leading: Icons.home,
+          leading: Icons.home_rounded,
           title: 'Home',
           ontap: () {
             controller.doRoute(context, '/home');
@@ -66,9 +76,10 @@ Drawer myDrawer(String appName, String version, BuildContext context) {
         ),
         const Divider(
           height: 1,
+          color: Colors.transparent,
         ),
         DrawerTile(
-          leading: Icons.person_2_outlined,
+          leading: Icons.person_2_rounded,
           title: 'About Developer',
           ontap: () {
             controller.doRoute(context, '/about_us');
@@ -76,45 +87,53 @@ Drawer myDrawer(String appName, String version, BuildContext context) {
         ),
         const Divider(
           height: 1,
+          color: Colors.transparent,
         ),
         DrawerTile(
-            leading: Icons.star_border_outlined,
-            title: 'Rate Us',
-            ontap: () {
-              controller.rateApp();
-            }),
+          leading: Icons.star_rounded,
+          title: 'Rate Us',
+          ontap: () {
+            controller.rateApp();
+          },
+        ),
         const Divider(
           height: 1,
+          color: Colors.transparent,
         ),
         DrawerTile(
-            leading: Icons.privacy_tip_outlined,
-            title: 'Privacy Policy',
-            ontap: () {
-              controller.doRoute(context, '/privacy_policy');
-            }),
+          leading: Icons.privacy_tip_rounded,
+          title: 'Privacy Policy',
+          ontap: () {
+            controller.doRoute(context, '/privacy_policy');
+          },
+        ),
         const Divider(
           height: 1,
+          color: Colors.transparent,
         ),
         DrawerTile(
-            leading: Icons.share_sharp,
-            title: 'Share App',
-            ontap: () async {
-              await SharePlus.instance.share(
-                ShareParams(
-                  text: 'https://play.google.com/store/apps/details?id=com.codecraft.whattodo',
-                  subject: 'any subject if you have',
-                ),
-              );
-            }),
+          leading: Icons.share_rounded,
+          title: 'Share App',
+          ontap: () async {
+            await SharePlus.instance.share(
+              ShareParams(
+                text: 'https://play.google.com/store/apps/details?id=com.codecraft.whattodo',
+                subject: 'What To Do App',
+              ),
+            );
+          },
+        ),
         const Divider(
           height: 1,
+          color: Colors.transparent,
         ),
         DrawerTile(
-            leading: Icons.exit_to_app,
-            title: 'Close App',
-            ontap: () {
-              exit(0);
-            })
+          leading: Icons.exit_to_app_rounded,
+          title: 'Close App',
+          ontap: () {
+            exit(0);
+          },
+        )
       ],
     ),
   );

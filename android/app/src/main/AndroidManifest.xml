@@ -11,7 +11,11 @@
             <data android:scheme="http" />
         </intent>
     </queries>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="29" />
+
    <application
+        android:requestLegacyExternalStorage="true"
         android:label="ToDo"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">

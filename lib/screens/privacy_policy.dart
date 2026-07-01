@@ -11,8 +11,8 @@ class PrivacyPolicy extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     
     // Theme Colors
-    final primaryColor = isDark ? Colors.blue.shade300 : Colors.blue.shade700;
-    final cardBgColor = isDark ? const Color(0xFF1E1E1E) : Colors.white;
+    final primaryColor = Theme.of(context).colorScheme.primary;
+    final cardBgColor = Theme.of(context).cardColor;
     final textColor = isDark ? Colors.white70 : Colors.grey.shade800;
     final subtitleColor = isDark ? Colors.white60 : Colors.grey.shade600;
     final borderColor = isDark ? Colors.white12 : Colors.grey.shade200;
@@ -26,14 +26,11 @@ class PrivacyPolicy extends StatelessWidget {
       child: Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
-          backgroundColor: isDark ? null : Colors.blue,
           elevation: 0,
           title: const Text(
             'Privacy Policy',
-            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
           ),
           centerTitle: true,
-          iconTheme: const IconThemeData(color: Colors.white),
         ),
         drawer: myDrawer('What To Do', 'App version: 1.0.0', context),
         body: SingleChildScrollView(
@@ -49,21 +46,21 @@ class PrivacyPolicy extends StatelessWidget {
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: isDark
-                        ? [Colors.blue.shade900.withAlpha(150), Colors.purple.shade900.withAlpha(150)]
-                        : [Colors.blue.shade50, Colors.blue.shade100],
+                        ? [Theme.of(context).colorScheme.primary.withAlpha(150), const Color(0xFF203A43).withAlpha(150)]
+                        : [Theme.of(context).colorScheme.primary.withAlpha(20), Theme.of(context).colorScheme.primary.withAlpha(40)],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
                   borderRadius: BorderRadius.circular(24),
                   border: Border.all(
-                    color: isDark ? Colors.blue.shade800.withAlpha(100) : Colors.blue.shade200,
+                    color: Theme.of(context).colorScheme.primary.withAlpha(80),
                   ),
                 ),
                 child: Column(
                   children: [
                     CircleAvatar(
                       radius: 36,
-                      backgroundColor: isDark ? Colors.blue.shade900.withAlpha(200) : Colors.white,
+                      backgroundColor: isDark ? Theme.of(context).colorScheme.primary.withAlpha(200) : Colors.white,
                       child: Icon(
                         Icons.shield_outlined,
                         color: primaryColor,
@@ -112,7 +109,7 @@ class PrivacyPolicy extends StatelessWidget {
                 context,
                 title: 'Information Collection & Use',
                 icon: Icons.info_outline_rounded,
-                iconColor: Colors.blue,
+                iconColor: primaryColor,
                 description:
                     "We do not collect any personal information or user data through the 'What to do (WTD)' app. Any tasks or information you save within the app are stored locally on your device's storage. We do not have access to or collect any of this data.",
                 isDark: isDark,
@@ -197,17 +194,17 @@ class PrivacyPolicy extends StatelessWidget {
                 width: double.infinity,
                 padding: const EdgeInsets.all(20.0),
                 decoration: BoxDecoration(
-                  color: isDark ? const Color(0xFF1E1E1E) : Colors.blue.shade50.withAlpha(120),
+                  color: isDark ? Theme.of(context).cardColor : Theme.of(context).colorScheme.primary.withAlpha(25),
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
-                    color: isDark ? Colors.white12 : Colors.blue.shade100,
+                    color: isDark ? Colors.white12 : Theme.of(context).colorScheme.primary.withAlpha(80),
                   ),
                 ),
                 child: Column(
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.mail_outline_rounded,
-                      color: Colors.blue,
+                      color: Theme.of(context).colorScheme.primary,
                       size: 40,
                     ),
                     const SizedBox(height: 12),
@@ -216,7 +213,7 @@ class PrivacyPolicy extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: isDark ? Colors.white : Colors.blue.shade900,
+                        color: isDark ? Colors.white : Theme.of(context).colorScheme.primary,
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -233,7 +230,7 @@ class PrivacyPolicy extends StatelessWidget {
                     ElevatedButton.icon(
                       onPressed: () => _launchEmail(),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
+                        backgroundColor: Theme.of(context).colorScheme.primary,
                         foregroundColor: Colors.white,
                         elevation: 0,
                         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),

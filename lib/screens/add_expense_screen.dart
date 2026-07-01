@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:wtd/screens/expense_controller.dart';
+import 'package:wtd/controllers/expense_controller.dart';
 
 class AddExpenseScreen extends StatefulWidget {
   const AddExpenseScreen({super.key});
@@ -76,7 +76,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
             colorScheme: isDark
                 ? ColorScheme.dark(
                     primary: _isIncome ? Colors.green : Colors.red,
-                    surface: const Color(0xFF1E1E1E),
+                    surface: Theme.of(context).cardColor,
                   )
                 : ColorScheme.light(
                     primary: _isIncome ? Colors.green : Colors.red,

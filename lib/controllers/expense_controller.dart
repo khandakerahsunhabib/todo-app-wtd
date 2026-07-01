@@ -6,6 +6,14 @@ import 'package:wtd/model/expense_item.dart';
 class ExpenseController extends GetxController {
   var expenseList = <ExpenseItem>[].obs;
   late Box<ExpenseItem> expenseBox;
+  final searchController = TextEditingController();
+  var searchQuery = ''.obs;
+
+  @override
+  void onClose() {
+    searchController.dispose();
+    super.onClose();
+  }
 
   @override
   void onInit() {
